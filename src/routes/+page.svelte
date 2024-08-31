@@ -57,6 +57,53 @@
           ],
         }}
       />
+      <AccountGroup
+        data={{
+          name: "Test",
+          accounts: [
+            {
+              name: "Iron",
+              rank: { rank: "iron", division: 1, lp: 0 },
+            },
+            {
+              name: "Bronze",
+              rank: { rank: "bronze", division: 1, lp: 0 },
+            },
+            {
+              name: "Silver",
+              rank: { rank: "silver", division: 1, lp: 0 },
+            },
+            {
+              name: "Gold",
+              rank: { rank: "gold", division: 1, lp: 0 },
+            },
+            {
+              name: "Platinum",
+              rank: { rank: "platinum", division: 1, lp: 0 },
+            },
+            {
+              name: "Emerald",
+              rank: { rank: "emerald", division: 1, lp: 0 },
+            },
+            {
+              name: "Diamond",
+              rank: { rank: "diamond", division: 1, lp: 0 },
+            },
+            {
+              name: "Master",
+              rank: { rank: "master", lp: 0 },
+            },
+            {
+              name: "Grandmaster",
+              rank: { rank: "grandmaster", lp: 0 },
+            },
+            {
+              name: "Challenger",
+              rank: { rank: "challenger", lp: 0 },
+            },
+          ],
+        }}
+      />
     </div>
     <div class="gap" />
     <div class="edit">Edit Accounts</div>
