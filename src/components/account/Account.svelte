@@ -1,11 +1,11 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/core";
-  import type { Account } from "./account";
   import Icon from "../util/Icon.svelte";
-  import { activeDropdown } from "../../store/ui";
+  import { activeDropdown, editMode } from "../../store/ui";
   import toast from "svelte-french-toast";
+  import type { PullPersistentValueType } from "../../store/persistent";
 
-  export let data: Account;
+  export let data: PullPersistentValueType<"accounts">["groups"][0]["accounts"][0];
 
   const login = async () => {
     toast.promise(
@@ -19,53 +19,56 @@
   };
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events svelte-ignore a11y-no-static-element-interactions -->
-<div class="container" on:click={login}>
-  <img alt="platinum" src={`ranks/${data.rank.rank}.png`} class="rank-icon" />
-  <div class="info">
-    <span class="name">{data.name}</span>
-    {#if data.rank !== undefined}
-      <span class="rank">
-        {data.rank.rank.charAt(0).toUpperCase()}{data.rank.rank.slice(1)}
-        {data.rank.division ?? ""}
-        {data.rank.lp}LP
-      </span>
-    {/if}
-  </div>
-  <div
-    class="dropdown"
-    on:click={(e) => {
-      e.stopPropagation();
-      activeDropdown.set({
-        target: e.currentTarget,
-        items: [
-          {
-            icon: "thirdparty/opgg.png",
-            label: "OP.GG",
-            link: "https://www.op.gg/summoners/euw/FluentCoding-000",
-          },
-          {
-            icon: "thirdparty/ugg.jpeg",
-            label: "U.GG",
-            link: "https://u.gg/lol/profile/euw1/FluentCoding-000",
-          },
-          {
-            icon: "thirdparty/log.jpg",
-            label: "LeagueOfGraphs",
-            link: "https://www.leagueofgraphs.com/summoner/euw/FluentCoding-000",
-          },
-          {
-            icon: "thirdparty/poro.png",
-            label: "Porofessor Live",
-            link: "https://porofessor.gg/live/euw/FluentCoding-000",
-          },
-        ],
-      });
-    }}
-  >
-    <div class="icon">
-      <Icon name="three_dots" height="100%" width="100%" />
+<div on:click={login} style={$editMode ? "pointer-events: none" : ""}>
+  <div class="container">
+    <img alt="platinum" src={`ranks/${data.rank.rank}.png`} class="rank-icon" />
+    <div class="info">
+      <span class="name">{data.name}</span>
+      {#if data.rank !== undefined}
+        <span class="rank">
+          {data.rank.rank.charAt(0).toUpperCase()}{data.rank.rank.slice(1)}
+          {data.rank.division ?? ""}
+          {data.rank.lp}LP
+        </span>
+      {/if}
     </div>
+    {#if !$editMode}
+      <div
+        class="dropdown"
+        on:click={(e) => {
+          e.stopPropagation();
+          activeDropdown.set({
+            target: e.currentTarget,
+            items: [
+              {
+                icon: "thirdparty/opgg.png",
+                label: "OP.GG",
+                link: "https://www.op.gg/summoners/euw/FluentCoding-000",
+              },
+              {
+                icon: "thirdparty/ugg.jpeg",
+                label: "U.GG",
+                link: "https://u.gg/lol/profile/euw1/FluentCoding-000",
+              },
+              {
+                icon: "thirdparty/log.jpg",
+                label: "LeagueOfGraphs",
+                link: "https://www.leagueofgraphs.com/summoner/euw/FluentCoding-000",
+              },
+              {
+                icon: "thirdparty/poro.png",
+                label: "Porofessor Live",
+                link: "https://porofessor.gg/live/euw/FluentCoding-000",
+              },
+            ],
+          });
+        }}
+      >
+        <div class="icon">
+          <Icon name="three_dots" height="100%" width="100%" />
+        </div>
+      </div>
+    {/if}
   </div>
 </div>
 

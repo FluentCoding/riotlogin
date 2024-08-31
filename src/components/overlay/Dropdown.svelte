@@ -4,10 +4,10 @@
   import { clickOutside } from "../util/clickOutside";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
+  import { fade } from "svelte/transition";
 
   const updatePosition = () => {
     rect.set($activeDropdown?.target.getBoundingClientRect());
-    console.info($rect);
   };
 
   let rect = writable<DOMRect | undefined>();
@@ -22,7 +22,11 @@
 
 {#if $activeDropdown}
   <div style={`position: absolute; top: ${$rect?.y}px; left: ${$rect?.x}px`}>
-    <div class="modal" use:clickOutside={() => activeDropdown.set(undefined)}>
+    <div
+      class="modal"
+      use:clickOutside={() => activeDropdown.set(undefined)}
+      transition:fade={{ duration: 150 }}
+    >
       {#each $activeDropdown.items as item}
         <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
         <div
@@ -49,7 +53,7 @@
     z-index: 10;
     top: 0;
     right: 0;
-    box-shadow: -3px 5px 15px 2px #000000;
+    box-shadow: -3px 5px 12px 2px #000000;
     overflow: hidden;
 
     border-radius: 12px;

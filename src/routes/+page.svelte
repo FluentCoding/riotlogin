@@ -4,16 +4,27 @@
   import "@fontsource/inter/500.css";
   import "@fontsource/inter/500-italic.css";
   import "@fontsource/inter/600.css";
-  import AccountGroup from "../components/account/AccountGroup.svelte";
   import Donation from "../components/donation/Donation.svelte";
-  import { activeDropdown } from "../store/ui";
-  import Dropdown from "../components/dropdown/Dropdown.svelte";
+  import { activeDropdown, activeModal, editMode } from "../store/ui";
+  import Dropdown from "../components/overlay/Dropdown.svelte";
   import { Toaster } from "svelte-french-toast";
+  import Modal from "../components/overlay/Modal.svelte";
+  import { afterUpdate } from "svelte";
+  import AccountGroupContainer from "../components/account/AccountGroupContainer.svelte";
+
+  $: disableInteractionsOverlay =
+    $activeDropdown !== undefined || $activeModal !== undefined;
 </script>
 
-<div
-  class={$activeDropdown !== undefined ? "page disable-interactions" : "page"}
->
+<div class="page">
+  {#if disableInteractionsOverlay}
+    <div
+      class="disable-interactions"
+      style={$activeDropdown
+        ? "background-color: rgba(0, 0, 0, 0.2)"
+        : "background-color: rgba(0, 0, 0, 0.8)"}
+    />
+  {/if}
   <Toaster
     toastOptions={{
       position: "bottom-center",
@@ -21,92 +32,18 @@
         "background-color: #2a2a2a; box-shadow: -3px 5px 15px 2px #000000; color: white",
     }}
   />
+  <Modal />
   <Dropdown />
   <div class="container">
     <div class="credits">by @fluentcoding</div>
     <div class="title">Riot Account Manager</div>
     <div class="gap" />
-    <div class="account-groups">
-      <AccountGroup
-        data={{
-          name: "Main Accounts",
-          accounts: [
-            {
-              name: "FluentCoding#000",
-              rank: { rank: "diamond", division: 4, lp: 60 },
-            },
-            {
-              name: "Dr. Meta",
-              rank: { rank: "gold", division: 1, lp: 24 },
-            },
-          ],
-        }}
-      />
-      <AccountGroup
-        data={{
-          name: "Accounts that i love stalking",
-          accounts: [
-            {
-              name: "Saitamaro",
-              rank: { rank: "grandmaster", lp: 820 },
-            },
-            {
-              name: "baussi",
-              rank: { rank: "challenger", lp: 1450 },
-            },
-          ],
-        }}
-      />
-      <AccountGroup
-        data={{
-          name: "Test",
-          accounts: [
-            {
-              name: "Iron",
-              rank: { rank: "iron", division: 1, lp: 0 },
-            },
-            {
-              name: "Bronze",
-              rank: { rank: "bronze", division: 1, lp: 0 },
-            },
-            {
-              name: "Silver",
-              rank: { rank: "silver", division: 1, lp: 0 },
-            },
-            {
-              name: "Gold",
-              rank: { rank: "gold", division: 1, lp: 0 },
-            },
-            {
-              name: "Platinum",
-              rank: { rank: "platinum", division: 1, lp: 0 },
-            },
-            {
-              name: "Emerald",
-              rank: { rank: "emerald", division: 1, lp: 0 },
-            },
-            {
-              name: "Diamond",
-              rank: { rank: "diamond", division: 1, lp: 0 },
-            },
-            {
-              name: "Master",
-              rank: { rank: "master", lp: 0 },
-            },
-            {
-              name: "Grandmaster",
-              rank: { rank: "grandmaster", lp: 0 },
-            },
-            {
-              name: "Challenger",
-              rank: { rank: "challenger", lp: 0 },
-            },
-          ],
-        }}
-      />
-    </div>
+    <AccountGroupContainer />
     <div class="gap" />
-    <div class="edit">Edit Accounts</div>
+    <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+    <div class="edit" on:click={() => editMode.set(!$editMode)}>
+      {$editMode ? "Stop edit mode" : "Edit Accounts"}
+    </div>
     <div class="fill-remaining-height" />
     <Donation />
   </div>
@@ -123,8 +60,7 @@
     z-index: 1;
     height: 100vh;
     width: 100vw;
-    pointer-events: none;
-    background-color: rgba(0, 0, 0, 0.1);
+    pointer-events: auto;
   }
 
   .page {
@@ -161,13 +97,6 @@
   .fill-remaining-height {
     margin-top: 10px;
     flex-grow: 1;
-  }
-
-  .account-groups {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    overflow-y: auto;
   }
 
   .edit {
