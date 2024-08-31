@@ -3,11 +3,19 @@
   import type { Account } from "./account";
   import Icon from "../util/Icon.svelte";
   import { activeDropdown } from "../../store/ui";
+  import toast from "svelte-french-toast";
 
   export let data: Account;
 
   const login = async () => {
-    await invoke("login", { username: "FluentCoding", password: "TEST" });
+    toast.promise(
+      invoke<string>("login", { username: "FluentCoding", password: "TEST" }),
+      {
+        loading: "Logging in...",
+        success: (e) => e,
+        error: (e) => e,
+      }
+    );
   };
 </script>
 
@@ -45,6 +53,11 @@
             icon: "thirdparty/log.jpg",
             label: "LeagueOfGraphs",
             link: "https://www.leagueofgraphs.com/summoner/euw/FluentCoding-000",
+          },
+          {
+            icon: "thirdparty/poro.png",
+            label: "Porofessor Live",
+            link: "https://porofessor.gg/live/euw/FluentCoding-000",
           },
         ],
       });

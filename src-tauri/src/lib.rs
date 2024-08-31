@@ -9,24 +9,22 @@ use windows::Win32::UI::WindowsAndMessaging::{FindWindowA, GetWindowRect, SetFor
 
 
 #[tauri::command]
-fn login(username: &str, password: &str) -> bool {
+fn login(username: &str, password: &str) -> std::result::Result<String, String> {
     println!("\nlogin proc");
     unsafe {
         let hwnd_res = FindWindowA(None, s!("Riot Client"));
         if hwnd_res.is_err() {
-            println!("Couldn't find handle");
-            return false;
+            return Err("Couldn't find riot client".into());
         }
         let hwnd = hwnd_res.unwrap();
         println!("hwnd:     {:?}", hwnd);
 
-        SetForegroundWindow(hwnd);
-        ShowWindow(hwnd, SW_RESTORE);
+        let _ = SetForegroundWindow(hwnd);
+        let _ = ShowWindow(hwnd, SW_RESTORE);
 
         let mut client_rect = RECT::default();
         if GetWindowRect(hwnd, &mut client_rect).is_err() {
-            println!("Couldn't retrieve riot client rect");
-            return false;
+            return Err("Couldn't retrieve riot client rect".into());
         }
         println!("rect:     L{} R{} T{} B{}", client_rect.left, client_rect.right, client_rect.top, client_rect.bottom);
 
@@ -40,7 +38,7 @@ fn login(username: &str, password: &str) -> bool {
         win::write(password);
         win::virtual_key(VK_RETURN);
     }
-    true
+    Ok("Successfully logged in".into())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

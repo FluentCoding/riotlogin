@@ -8,11 +8,19 @@
   import Donation from "../components/donation/Donation.svelte";
   import { activeDropdown } from "../store/ui";
   import Dropdown from "../components/dropdown/Dropdown.svelte";
+  import { Toaster } from "svelte-french-toast";
 </script>
 
 <div
   class={$activeDropdown !== undefined ? "page disable-interactions" : "page"}
 >
+  <Toaster
+    toastOptions={{
+      position: "bottom-center",
+      style:
+        "background-color: #2a2a2a; box-shadow: -3px 5px 15px 2px #000000; color: white",
+    }}
+  />
   <Dropdown />
   <div class="container">
     <div class="credits">by @fluentcoding</div>

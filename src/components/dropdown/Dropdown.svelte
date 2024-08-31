@@ -30,6 +30,7 @@
           on:click={(e) => {
             e.stopPropagation();
             open(item.link);
+            activeDropdown.set(undefined);
           }}
         >
           {#if item.icon}
