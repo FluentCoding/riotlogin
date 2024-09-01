@@ -10,6 +10,7 @@
   import { Toaster } from "svelte-french-toast";
   import Modal from "../components/overlay/Modal.svelte";
   import AccountGroupContainer from "../components/account/AccountGroupContainer.svelte";
+  import { exit } from "@tauri-apps/plugin-process";
 
   $: disableInteractionsOverlay =
     $activeDropdown !== undefined || $activeModal !== undefined;
@@ -34,6 +35,9 @@
   <Modal />
   <Dropdown />
   <div class="container">
+    <div class="header">
+      <div class="exit" on:click={() => exit()}>Exit</div>
+    </div>
     <div class="credits">by @fluentcoding</div>
     <div class="title">Riot Account Manager</div>
     <div class="gap" />
@@ -75,41 +79,61 @@
     display: flex;
     flex-direction: column;
     height: calc(100vh - 20px);
-  }
 
-  .credits {
-    font-size: 13px;
-    font-weight: 300;
-    color: #a9a9a9;
-    margin-bottom: 5px;
-  }
+    .header {
+      display: flex;
+      justify-content: end;
+      .exit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+        border-radius: 10px;
+        width: 30px;
+        padding: 5px;
+        background-color: #323232;
+        cursor: pointer;
 
-  .title {
-    font-size: 26px;
-    font-weight: 600;
-  }
+        &:hover {
+          outline: 2px solid lightcoral;
+        }
+      }
+    }
 
-  .gap {
-    margin-top: 15px;
-  }
+    .credits {
+      font-size: 13px;
+      font-weight: 300;
+      color: #a9a9a9;
+      margin-bottom: 5px;
+    }
 
-  .fill-remaining-height {
-    margin-top: 10px;
-    flex-grow: 1;
-  }
+    .title {
+      font-size: 26px;
+      font-weight: 600;
+    }
 
-  .edit {
-    background-color: #323232;
-    border-radius: 12px;
-    text-align: center;
-    padding: 8px 0;
-    color: #d5d5d5;
-    font-size: 13px;
-    font-weight: 500;
+    .gap {
+      margin-top: 15px;
+    }
 
-    &:hover {
-      background-color: #2d2d2d;
-      cursor: pointer;
+    .fill-remaining-height {
+      margin-top: 10px;
+      flex-grow: 1;
+    }
+
+    .edit {
+      background-color: #323232;
+      border-radius: 12px;
+      text-align: center;
+      padding: 8px 0;
+      color: #d5d5d5;
+      font-size: 13px;
+      font-weight: 500;
+
+      &:hover {
+        background-color: #2d2d2d;
+        cursor: pointer;
+      }
     }
   }
 </style>
