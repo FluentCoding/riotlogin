@@ -76,6 +76,11 @@
                 link: "https://u.gg/lol/profile/euw1/FluentCoding-000",
               },
               {
+                icon: "thirdparty/deeplol.png",
+                label: "DEEPLOL",
+                link: "https://deeplol.gg/summoner/EUW/FluentCoding-000",
+              },
+              {
                 icon: "thirdparty/log.jpg",
                 label: "LeagueOfGraphs",
                 link: "https://www.leagueofgraphs.com/summoner/euw/FluentCoding-000",
