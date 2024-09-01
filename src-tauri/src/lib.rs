@@ -105,7 +105,6 @@ pub fn run() {
 
                 // TODO move to function
                 let window = app.get_webview_window("main").unwrap();
-                let _ = window.show().unwrap();
                 /*let logical_size = tauri::LogicalSize::<f64> {
                   width: 300.00,
                   height: 400.00,
@@ -132,6 +131,7 @@ pub fn run() {
                 };
                 println!("Result Pos  X{} Y{}", logical_position.x, logical_position.y);
                 let _ = window.set_position(tauri::Position::Logical(logical_position));
+                let _ = window.show().unwrap();
                 let _ = window.set_focus();
             Ok(())
         })
