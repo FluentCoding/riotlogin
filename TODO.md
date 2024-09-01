@@ -1,17 +1,26 @@
-Frontend:
+# Frontend
 
-- Adsense
-- Click on middle, then tab -> select & remove & username -> tab -> select & remove & password -> enter
-- Optional tab group on top for all games
-- Color themes
-- Autostart
-- Taskbar
+- Cache-store (account id <-> latest pulled rank entry together with pull timestamp)
+- Settings (e.g. select match history providers, autostart, )
 
-Login:
+# Backend
+
+- Rate-limited (per IP + DDoS protection) league rank endpoint for many accounts
+- Update server static JSON hosting
+
+# Login
 
 - Handle inactivity modal
-- Handle incorrect credentials popout
+- Handle incorrect credentials popout (purple)
 
-Before Publish:
+# Before Publish
 
 - Obfuscation
+- Landing page + domain + webhosting (maybe hetzner)
+- KoFi and Patreon (maybe PayPal)
+- GitHub Action for windows releases
+
+# After release
+
+- Optional tab group on top for all games (only support league for now)
+- Color themes
