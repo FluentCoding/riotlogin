@@ -8,8 +8,8 @@ export const activeDropdown = writable<
   | undefined
 >();
 
-interface ModalField {
-  type: "text";
+interface TextModalField {
+  type: "text" | "password";
   id: string;
   label: string;
   default?: string;
@@ -23,7 +23,7 @@ interface ModalAction {
 
 export interface ModalType {
   title: string;
-  fields: ModalField[];
+  fields: TextModalField[];
   actions: ModalAction[];
 }
 

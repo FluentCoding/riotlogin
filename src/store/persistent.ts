@@ -45,7 +45,8 @@ const persistent = await (async () => {
         accounts: {
           uuid: string;
           name: string;
-          rank: { rank: Rank; division?: number; lp: number };
+          // password => pull from rust keychain
+          rank?: { rank: Rank; division?: number; lp: number }; // TODO PULL FROM SERVER + CACHE
         }[];
       }[];
     }>("accounts", {

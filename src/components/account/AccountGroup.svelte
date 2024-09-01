@@ -1,8 +1,13 @@
 <script lang="ts">
-  import { accountGroupActions } from "../../actions/accounts/edit";
+  import {
+    accountActions,
+    accountGroupActions,
+  } from "../../actions/accounts/edit";
   import type { PullPersistentValueType } from "../../store/persistent";
   import { editMode } from "../../store/ui";
+  import DashedNewButton from "../util/DashedNewButton.svelte";
   import Account from "./Account.svelte";
+  import RemoveDeleteActions from "./RemoveDeleteActions.svelte";
 
   export let data: PullPersistentValueType<"accounts">["groups"][0];
 </script>
@@ -11,29 +16,23 @@
   <div class="header">
     <div class="title">{data.name}</div>
     {#if $editMode}
-      <div class="edit-actions">
-        <div
-          class="rename"
-          on:click={() => accountGroupActions.rename(data.uuid)}
-        >
-          Rename
-        </div>
-        <div
-          class="delete"
-          on:click={() => accountGroupActions.delete(data.uuid)}
-        >
-          Delete
-        </div>
-      </div>
+      <RemoveDeleteActions
+        rename={() => accountGroupActions.rename(data.uuid)}
+        remove={() => accountGroupActions.delete(data.uuid)}
+      />
     {/if}
   </div>
   <div class="accounts">
     {#each data.accounts as account (account.uuid)}
       <Account data={account}></Account>
     {/each}
-    <Account
-      data={{ name: "Test", rank: { lp: 1, rank: "diamond" }, uuid: "1" }}
-    ></Account>
+    {#if $editMode}
+      <div style="margin-top: 5px">
+        <DashedNewButton click={() => accountActions.add(data.uuid)}
+          >Add account</DashedNewButton
+        >
+      </div>
+    {/if}
   </div>
 </div>
 
@@ -56,19 +55,6 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
-      }
-      .edit-actions {
-        display: flex;
-        gap: 6px;
-
-        .rename {
-          color: lightgreen;
-          cursor: pointer;
-        }
-        .delete {
-          color: lightcoral;
-          cursor: pointer;
-        }
       }
     }
 

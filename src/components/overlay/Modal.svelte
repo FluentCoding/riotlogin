@@ -4,21 +4,15 @@
   import { clickOutside } from "../util/clickOutside";
   import { fade } from "svelte/transition";
 
-  let result: NonNullable<Awaited<ReturnType<typeof showModal>>> = {
-    action: "",
-    fields: {},
-  };
+  let result: NonNullable<Awaited<ReturnType<typeof showModal>>>["fields"] = {};
 
   $: if ($activeModal)
-    result = {
-      action: "",
-      fields: Object.fromEntries(
-        $activeModal.fields.map((field) => [field.id, field.default ?? ""])
-      ),
-    };
+    result = Object.fromEntries(
+      $activeModal.fields.map((field) => [field.id, field.default ?? ""])
+    );
 
   $: disabled = $activeModal?.fields.some(
-    (field) => field.required && result.fields[field.id].trim() === ""
+    (field) => field.required && result[field.id].trim() === ""
   );
 
   const cancelModal = () => {
@@ -27,8 +21,7 @@
   };
 
   const submitModal = (action: string) => {
-    result.action = action;
-    $activeModal?.resolve(result);
+    $activeModal?.resolve({ action, fields: result });
   };
 
   onMount(() => {
@@ -56,16 +49,24 @@
             <!-- svelte-ignore a11y-autofocus -->
             <input
               autofocus={index === 0}
-              type="tel"
+              type={field.type === "text" ? "tel" : "password"}
               id={field.id}
-              value={result.fields[field.id]}
-              on:input={(e) =>
-                (result.fields[field.id] = e.currentTarget.value)}
-              on:keydown={(e) =>
-                e.key === "Enter" &&
-                $activeModal.actions.length === 1 &&
-                !disabled &&
-                submitModal($activeModal.actions[0].id)}
+              value={result[field.id]}
+              on:input={(e) => (result[field.id] = e.currentTarget.value)}
+              on:keydown={(e) => {
+                if (e.key === "Enter") {
+                  $activeModal.actions.length === 1 &&
+                    !disabled &&
+                    submitModal($activeModal.actions[0].id);
+                } else if (
+                  (e.key === "Tab" &&
+                    !e.shiftKey &&
+                    index === $activeModal.fields.length - 1) ||
+                  (e.key === "Tab" && e.shiftKey && index === 0)
+                ) {
+                  e.preventDefault();
+                }
+              }}
               autocomplete="off"
               spellcheck="false"
             />
@@ -125,6 +126,8 @@
 
       .fields {
         display: flex;
+        flex-direction: column;
+        gap: 5px;
 
         .field {
           display: flex;
@@ -134,6 +137,7 @@
           label {
             white-space: nowrap;
             font-family: inherit;
+            min-width: 25%;
           }
 
           input {

@@ -4,6 +4,8 @@
   import { activeDropdown, editMode } from "../../store/ui";
   import toast from "svelte-french-toast";
   import type { PullPersistentValueType } from "../../store/persistent";
+  import RemoveDeleteActions from "./RemoveDeleteActions.svelte";
+  import { accountActions } from "../../actions/accounts/edit";
 
   export let data: PullPersistentValueType<"accounts">["groups"][0]["accounts"][0];
 
@@ -19,20 +21,35 @@
   };
 </script>
 
-<div on:click={login} style={$editMode ? "pointer-events: none" : ""}>
-  <div class="container">
-    <img alt="platinum" src={`ranks/${data.rank.rank}.png`} class="rank-icon" />
-    <div class="info">
-      <span class="name">{data.name}</span>
-      {#if data.rank !== undefined}
-        <span class="rank">
-          {data.rank.rank.charAt(0).toUpperCase()}{data.rank.rank.slice(1)}
-          {data.rank.division ?? ""}
-          {data.rank.lp}LP
-        </span>
-      {/if}
-    </div>
-    {#if !$editMode}
+<div
+  class="container"
+  on:click={(e) => !$editMode && login()}
+  class:disable-interactions={$editMode}
+>
+  {#if data.rank}
+    <img
+      alt={`${data.rank.rank.charAt(0).toUpperCase()}${data.rank.rank.slice(1)}`}
+      src={`ranks/${data.rank.rank}.png`}
+      class="rank-icon"
+    />
+  {/if}
+  <div class="info">
+    <span class="name">{data.name}</span>
+    {#if data.rank}
+      <span class="rank">
+        {data.rank.rank.charAt(0).toUpperCase()}{data.rank.rank.slice(1)}
+        {data.rank.division ?? ""}
+        {data.rank.lp}LP
+      </span>
+    {/if}
+  </div>
+  <div class="end">
+    {#if $editMode}
+      <RemoveDeleteActions
+        rename={() => accountActions.rename(data.uuid)}
+        remove={() => accountActions.delete(data.uuid)}
+      />
+    {:else}
       <div
         class="dropdown"
         on:click={(e) => {
@@ -84,8 +101,6 @@
     padding: 0 10px;
     height: 60px;
 
-    cursor: pointer;
-
     .rank-icon {
       width: 60px;
       height: 60px;
@@ -113,8 +128,11 @@
       }
     }
 
-    .dropdown {
+    .end {
       margin-left: auto;
+    }
+
+    .dropdown {
       padding: 12px;
       height: 18px;
       width: 18px;
@@ -131,9 +149,12 @@
       }
     }
 
-    &:hover:not(:has(.dropdown:hover)):not(:has(.modal:hover)) {
+    &:hover:not(:has(.dropdown:hover)):not(:has(.modal:hover)):not(
+        .disable-interactions
+      ) {
       outline: 2px solid #0088ff;
       background-color: #242424;
+      cursor: pointer;
     }
   }
 </style>

@@ -9,7 +9,6 @@
   import Dropdown from "../components/overlay/Dropdown.svelte";
   import { Toaster } from "svelte-french-toast";
   import Modal from "../components/overlay/Modal.svelte";
-  import { afterUpdate } from "svelte";
   import AccountGroupContainer from "../components/account/AccountGroupContainer.svelte";
 
   $: disableInteractionsOverlay =
