@@ -2,7 +2,7 @@
   export let size: number;
   export let color: string;
   export let width: number;
-  export let fullRotationInSeconds: number = 1;
+  export let fullRotationInSeconds: number;
 </script>
 
 <span
