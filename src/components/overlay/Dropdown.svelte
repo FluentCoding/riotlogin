@@ -68,7 +68,7 @@
       gap: 5px;
 
       &:hover {
-        background-color: gray;
+        background-color: #323232;
       }
     }
   }
