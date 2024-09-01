@@ -6,6 +6,8 @@
   import type { PullPersistentValueType } from "../../store/persistent";
   import RemoveDeleteActions from "./RemoveDeleteActions.svelte";
   import { accountActions } from "../../actions/accounts/edit";
+  import { fly } from "svelte/transition";
+  import { quintOut } from "svelte/easing";
 
   export let data: PullPersistentValueType<"accounts">["groups"][0]["accounts"][0];
 
@@ -25,6 +27,12 @@
   class="container"
   on:click={(e) => !$editMode && login()}
   class:disable-interactions={$editMode}
+  transition:fly={{
+    duration: 200,
+    x: -100,
+    opacity: 0.5,
+    easing: quintOut,
+  }}
 >
   {#if data.rank}
     <img
@@ -137,6 +145,7 @@
       height: 18px;
       width: 18px;
       border-radius: 50%;
+      cursor: pointer;
 
       .icon {
         height: 100%;

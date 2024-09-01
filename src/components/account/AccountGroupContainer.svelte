@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { afterUpdate, onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { accountGroupActions } from "../../actions/accounts/edit";
   import persistent from "../../store/persistent";
   import { editMode } from "../../store/ui";
-  import Icon from "../util/Icon.svelte";
   import AccountGroup from "./AccountGroup.svelte";
   import DashedNewButton from "../util/DashedNewButton.svelte";
 

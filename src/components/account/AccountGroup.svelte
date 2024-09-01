@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fly } from "svelte/transition";
   import {
     accountActions,
     accountGroupActions,
@@ -8,11 +9,20 @@
   import DashedNewButton from "../util/DashedNewButton.svelte";
   import Account from "./Account.svelte";
   import RemoveDeleteActions from "./RemoveDeleteActions.svelte";
+  import { quintOut } from "svelte/easing";
 
   export let data: PullPersistentValueType<"accounts">["groups"][0];
 </script>
 
-<div class="group">
+<div
+  class="group"
+  transition:fly={{
+    duration: 200,
+    x: -100,
+    opacity: 0.5,
+    easing: quintOut,
+  }}
+>
   <div class="header">
     <div class="title">{data.name}</div>
     {#if $editMode}

@@ -137,7 +137,7 @@
           label {
             white-space: nowrap;
             font-family: inherit;
-            min-width: 25%;
+            min-width: 30%;
           }
 
           input {
