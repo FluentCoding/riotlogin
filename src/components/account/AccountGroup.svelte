@@ -5,7 +5,7 @@
     accountGroupActions,
   } from "../../actions/accounts/edit";
   import type { PullPersistentValueType } from "../../store/persistent";
-  import { editMode } from "../../store/ui";
+  import { editMode } from "../../store/app";
   import DashedNewButton from "../util/DashedNewButton.svelte";
   import Account from "./Account.svelte";
   import RemoveDeleteActions from "./RemoveDeleteActions.svelte";

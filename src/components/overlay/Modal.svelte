@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { activeModal, showModal, type ModalType } from "../../store/ui";
+  import { activeModal, showModal, type ModalType } from "../../store/app";
   import { clickOutside } from "../util/clickOutside";
   import { fade } from "svelte/transition";
 

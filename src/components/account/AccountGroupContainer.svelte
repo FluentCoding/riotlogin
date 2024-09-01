@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { accountGroupActions } from "../../actions/accounts/edit";
   import persistent from "../../store/persistent";
-  import { editMode } from "../../store/ui";
+  import { editMode } from "../../store/app";
   import AccountGroup from "./AccountGroup.svelte";
   import DashedNewButton from "../util/DashedNewButton.svelte";
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/core";
   import Icon from "../util/Icon.svelte";
-  import { activeDropdown, editMode } from "../../store/ui";
+  import { activeDropdown, editMode } from "../../store/app";
   import toast from "svelte-french-toast";
   import type { PullPersistentValueType } from "../../store/persistent";
   import RemoveDeleteActions from "./RemoveDeleteActions.svelte";
@@ -14,14 +14,11 @@
   export let data: PullPersistentValueType<"accounts">["groups"][0]["accounts"][0];
 
   const login = async () => {
-    toast.promise(
-      invoke<string>("login", { username: "FluentCoding", password: "TEST" }),
-      {
-        loading: "Logging in...",
-        success: (e) => e,
-        error: (e) => e,
-      }
-    );
+    toast.promise(accountActions.login(data.uuid), {
+      loading: "Logging in...",
+      success: (e) => e,
+      error: (e) => e,
+    });
   };
 
   const ranksCache = persistent.ranksCache;

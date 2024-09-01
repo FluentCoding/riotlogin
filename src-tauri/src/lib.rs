@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder};
 use tauri::{AppHandle, Manager};
-use win::get_taskbar_size;
+use win::{get_taskbar_size, send_inputs};
 use windows::core::*;
 use windows::Win32::Foundation::RECT;
 use windows::Win32::UI::Input::KeyboardAndMouse::{VK_RETURN, VK_TAB};
@@ -89,12 +89,17 @@ fn login(username: &str, password: &str) -> std::result::Result<String, String> 
         );
         println!("center:   X{} Y{}", center_x, center_y);
 
-        win::click(center_x, center_y);
-        win::virtual_key(VK_TAB);
-        win::write(username);
-        win::virtual_key(VK_TAB);
-        win::write(password);
-        win::virtual_key(VK_RETURN);
+        send_inputs(
+            [
+                win::click(center_x, center_y),
+                win::virtual_key(VK_TAB),
+                win::write(username),
+                win::virtual_key(VK_TAB),
+                win::write(password),
+                win::virtual_key(VK_RETURN),
+            ]
+            .concat(),
+        );
     }
     Ok("Successfully logged in".into())
 }
@@ -102,6 +107,7 @@ fn login(username: &str, password: &str) -> std::result::Result<String, String> 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_single_instance::init(|app, _, _| {
             let window = app.get_webview_window("main").unwrap();
             let _ = window.show().unwrap();
@@ -110,6 +116,27 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_process::init())
+        .plugin(
+            tauri_plugin_stronghold::Builder::new(|password| {
+                use argon2::{
+                    password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
+                    Argon2,
+                };
+
+                // Argon2 with default params (Argon2id v19)
+                let argon2 = Argon2::default();
+                let salt = SaltString::generate(&mut OsRng);
+
+                // Hash password to PHC string ($argon2id$v=19$...)
+                let password_hash = argon2
+                    .hash_password(password.as_bytes(), &salt)
+                    .unwrap()
+                    .to_string();
+
+                password_hash.as_bytes().to_vec()
+            })
+            .build(),
+        )
         .invoke_handler(tauri::generate_handler![login])
         .on_window_event(|_, event| match event {
             tauri::WindowEvent::Resized { .. } => {

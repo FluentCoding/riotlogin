@@ -1,6 +1,6 @@
 <script lang="ts">
   import { open } from "@tauri-apps/plugin-shell";
-  import { activeDropdown } from "../../store/ui";
+  import { activeDropdown } from "../../store/app";
   import { clickOutside } from "../util/clickOutside";
   import { onMount } from "svelte";
   import { writable } from "svelte/store";

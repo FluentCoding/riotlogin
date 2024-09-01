@@ -56,6 +56,10 @@ const persistent = await (async () => {
       version: 1;
       entries: Record<string, { rank: Rank; division?: number; lp: number }>;
     }>("ranks_cache", { version: 1, entries: {} }),
+    rawPasswords: await K<{
+      version: 1;
+      entries: Record<string, string>;
+    }>("raw_passwords", { version: 1, entries: {} }),
   };
 })();
 

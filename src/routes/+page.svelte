@@ -5,7 +5,7 @@
   import "@fontsource/inter/500-italic.css";
   import "@fontsource/inter/600.css";
   import Donation from "../components/donation/Donation.svelte";
-  import { activeDropdown, activeModal, editMode } from "../store/ui";
+  import { activeDropdown, activeModal, editMode } from "../store/app";
   import Dropdown from "../components/overlay/Dropdown.svelte";
   import { Toaster } from "svelte-french-toast";
   import Modal from "../components/overlay/Modal.svelte";

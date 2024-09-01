@@ -15,9 +15,11 @@
   "dependencies": {
     "@fontsource/inter": "^5.0.20",
     "@tauri-apps/api": ">=2.0.0-rc.0",
+    "@tauri-apps/plugin-fs": "^2.0.0-rc.2",
     "@tauri-apps/plugin-process": "^2.0.0-rc.1",
     "@tauri-apps/plugin-shell": ">=2.0.0-rc.0",
     "@tauri-apps/plugin-store": "^2.0.0-rc.1",
+    "@tauri-apps/plugin-stronghold": "^2.0.0-rc.1",
     "set-interval-async": "^3.0.3",
     "svelte-french-toast": "^1.2.0",
     "uuid": "^10.0.0"

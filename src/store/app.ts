@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import { rawPasswordStore } from "./password";
 
 export const activeDropdown = writable<
   | {
@@ -52,3 +53,5 @@ export const activeModal = writable<
 >();
 
 export const editMode = writable<boolean>(false);
+
+export let passwordStore = rawPasswordStore;
