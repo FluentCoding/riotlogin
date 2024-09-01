@@ -8,6 +8,8 @@
   import { accountActions } from "../../actions/accounts/edit";
   import { fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
+  import persistent from "../../store/persistent";
+  import Loader from "../util/Loader.svelte";
 
   export let data: PullPersistentValueType<"accounts">["groups"][0]["accounts"][0];
 
@@ -21,6 +23,9 @@
       }
     );
   };
+
+  const ranksCache = persistent.ranksCache;
+  $: rank = $ranksCache.entries[data.uuid];
 </script>
 
 <div
@@ -34,20 +39,27 @@
     easing: quintOut,
   }}
 >
-  {#if data.rank}
+  {#if rank}
     <img
-      alt={`${data.rank.rank.charAt(0).toUpperCase()}${data.rank.rank.slice(1)}`}
-      src={`ranks/${data.rank.rank}.png`}
+      alt={`${rank.rank.charAt(0).toUpperCase()}${rank.rank.slice(1)}`}
+      src={`ranks/${rank.rank}.png`}
       class="rank-icon"
     />
+  {:else}
+    <div
+      class="rank-icon"
+      style="display: flex; align-items: center; justify-content: center"
+    >
+      <Loader size={36} color="gray" width={3} fullRotationInSeconds={2.5} />
+    </div>
   {/if}
   <div class="info">
     <span class="name">{data.name}</span>
-    {#if data.rank}
+    {#if rank}
       <span class="rank">
-        {data.rank.rank.charAt(0).toUpperCase()}{data.rank.rank.slice(1)}
-        {data.rank.division ?? ""}
-        {data.rank.lp}LP
+        {rank.rank.charAt(0).toUpperCase()}{rank.rank.slice(1)}
+        {rank.division ?? ""}
+        {rank.lp}LP
       </span>
     {/if}
   </div>
@@ -57,7 +69,7 @@
         rename={() => accountActions.rename(data.uuid)}
         remove={() => accountActions.delete(data.uuid)}
       />
-    {:else}
+    {:else if rank}
       <div
         class="dropdown"
         on:click={(e) => {

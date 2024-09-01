@@ -11,9 +11,16 @@
   import Modal from "../components/overlay/Modal.svelte";
   import AccountGroupContainer from "../components/account/AccountGroupContainer.svelte";
   import { exit } from "@tauri-apps/plugin-process";
+  import { onMount } from "svelte";
+  import pullAction from "../actions/ranks/pull";
 
   $: disableInteractionsOverlay =
     $activeDropdown !== undefined || $activeModal !== undefined;
+
+  onMount(() => {
+    pullAction.start(2000);
+    return () => pullAction.stop();
+  });
 </script>
 
 <div class="page">

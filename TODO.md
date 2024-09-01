@@ -1,10 +1,12 @@
 # Frontend
 
 - Cache-store (account id <-> latest pulled rank entry together with pull timestamp)
-- Settings (e.g. select match history providers, autostart, )
+- Pull account ranks periodically
+- Settings (e.g. select match history providers, autostart)
 
 # Backend
 
+- Store account passwords in operating system keychain
 - Rate-limited (per IP + DDoS protection) league rank endpoint for many accounts
 - Update server static JSON hosting
 
