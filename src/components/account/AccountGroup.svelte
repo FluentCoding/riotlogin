@@ -27,7 +27,7 @@
     <div class="title">{data.name}</div>
     {#if $editMode}
       <GreenRedActions
-        edit={[() => accountGroupActions.rename(data.uuid), "Rename"]}
+        edit={["Rename", () => accountGroupActions.rename(data.uuid)]}
         remove={() => accountGroupActions.delete(data.uuid)}
       />
     {/if}
