@@ -50,7 +50,7 @@ export const accountGroupActions = {
   delete: async (uuid: string) => {
     const currentAccounts = persistent.accounts.get();
     const removedGroup = currentAccounts.groups.find(
-      (group) => group.uuid !== uuid
+      (group) => group.uuid === uuid
     );
     if (removedGroup) {
       await Promise.all(

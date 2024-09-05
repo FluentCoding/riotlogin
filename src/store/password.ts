@@ -39,41 +39,53 @@ export const securedPasswordStore = async (
   master: string
 ): Promise<PasswordStore> => {
   const vaultPath = `${await appDataDir()}/vault.hold`;
-  const stronghold = await Stronghold.load(
-    `${await appDataDir()}/vault.hold`,
-    master
-  );
-  let client: Client;
-  const clientName = "riotaccountmanager";
-  try {
-    client = await stronghold.loadClient(clientName);
-  } catch {
-    client = await stronghold.createClient(clientName);
-  }
-  const store = client.getStore();
+  let _instance: [Stronghold, Client] | undefined;
+
+  const instance = async () => {
+    if (!_instance) {
+      const stronghold = await Stronghold.load(vaultPath, master);
+      const clientName = "riotaccountmanager";
+      try {
+        return (_instance = [
+          stronghold,
+          await stronghold.loadClient(clientName),
+        ]);
+      } catch {
+        return (_instance = [
+          stronghold,
+          await stronghold.createClient(clientName),
+        ]);
+      }
+    }
+    return _instance;
+  };
 
   return {
     async addPassword(userUuid, password) {
-      await store.insert(
-        userUuid,
-        Array.from(new TextEncoder().encode(password))
-      );
+      const [stronghold, client] = await instance();
+      await client
+        .getStore()
+        .insert(userUuid, Array.from(new TextEncoder().encode(password)));
       await stronghold.save();
       return true;
     },
     async removePassword(userUuid) {
-      await store.remove(userUuid);
+      const [stronghold, client] = await instance();
+      await client.getStore().remove(userUuid);
       await stronghold.save();
       return true;
     },
     async getPassword(userUuid) {
-      const data = await store.get(userUuid);
+      const [_, client] = await instance();
+      const data = await client.getStore().get(userUuid);
       if (!data) return undefined;
       return new TextDecoder().decode(new Uint8Array(data));
     },
     async reset() {
+      const [stronghold] = await instance();
       await stronghold.unload();
       await remove(vaultPath);
+      _instance = undefined;
       return true;
     },
   };

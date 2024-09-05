@@ -1,5 +1,5 @@
 import { Store } from "@tauri-apps/plugin-store";
-import { get, writable } from "svelte/store";
+import { get as getFromStore, writable } from "svelte/store";
 
 type PersistentValue = {
   version: number;
@@ -22,16 +22,25 @@ export type PullPersistentValueType<T extends keyof typeof persistent> =
 
 const persistent = await (async () => {
   const store = new Store("data.bin");
-  const K = async <T extends PersistentValue>(key: string, _default: T) => {
+  const K = async <const T extends PersistentValue>(
+    key: string,
+    _default: T
+  ) => {
     const _store = writable((await store.get<T>(key)) ?? _default);
+
+    const get = () => getFromStore(_store);
+    const set = async (value: T) => {
+      await store.set(key, value);
+      await store.save();
+      _store.set(value);
+    };
 
     return {
       subscribe: _store.subscribe,
-      get: () => get(_store),
-      set: async (value: T) => {
-        await store.set(key, value);
-        await store.save();
-        _store.set(value);
+      get,
+      set,
+      change: async (change: Partial<T>) => {
+        return await set({ ...get(), ...change });
       },
     };
   };
@@ -45,7 +54,6 @@ const persistent = await (async () => {
         accounts: {
           uuid: string;
           name: string;
-          // TODO password => pull from rust keychain
         }[];
       }[];
     }>("accounts", {
