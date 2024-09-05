@@ -1,28 +1,32 @@
 <script lang="ts">
   import type { MouseEventHandler } from "svelte/elements";
 
-  export let rename: MouseEventHandler<HTMLDivElement>;
-  export let remove: MouseEventHandler<HTMLDivElement>;
+  export let edit:
+    | MouseEventHandler<HTMLDivElement>
+    | [string, MouseEventHandler<HTMLDivElement>];
+  export let remove:
+    | MouseEventHandler<HTMLDivElement>
+    | [string, MouseEventHandler<HTMLDivElement>];
 </script>
 
 <div class="actions">
   <div
-    class="rename"
+    class="edit"
     on:click={(e) => {
       e.stopPropagation();
-      rename(e);
+      Array.isArray(edit) ? edit[1](e) : edit(e);
     }}
   >
-    Rename
+    {#if Array.isArray(edit)}{edit[0]}{:else}Edit{/if}
   </div>
   <div
     class="delete"
     on:click={(e) => {
       e.stopPropagation();
-      remove(e);
+      Array.isArray(remove) ? remove[1](e) : remove(e);
     }}
   >
-    Delete
+    {#if Array.isArray(remove)}{remove[0]}{:else}Delete{/if}
   </div>
 </div>
 
@@ -31,7 +35,7 @@
     display: flex;
     gap: 6px;
 
-    .rename {
+    .edit {
       color: lightgreen;
       cursor: pointer;
       pointer-events: auto;

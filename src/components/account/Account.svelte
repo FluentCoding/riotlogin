@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { invoke } from "@tauri-apps/api/core";
   import Icon from "../util/Icon.svelte";
   import { activeDropdown, editMode } from "../../store/app";
   import toast from "svelte-french-toast";
   import type { PullPersistentValueType } from "../../store/persistent";
-  import RemoveDeleteActions from "./RemoveDeleteActions.svelte";
+  import GreenRedActions from "./GreenRedActions.svelte";
   import { accountActions } from "../../actions/accounts/edit";
   import { fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
@@ -62,8 +61,8 @@
   </div>
   <div class="end">
     {#if $editMode}
-      <RemoveDeleteActions
-        rename={() => accountActions.rename(data.uuid)}
+      <GreenRedActions
+        edit={() => accountActions.rename(data.uuid)}
         remove={() => accountActions.delete(data.uuid)}
       />
     {:else if rank}

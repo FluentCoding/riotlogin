@@ -8,8 +8,8 @@
   import { editMode } from "../../store/app";
   import DashedNewButton from "../util/DashedNewButton.svelte";
   import Account from "./Account.svelte";
-  import RemoveDeleteActions from "./RemoveDeleteActions.svelte";
   import { quintOut } from "svelte/easing";
+  import GreenRedActions from "./GreenRedActions.svelte";
 
   export let data: PullPersistentValueType<"accounts">["groups"][0];
 </script>
@@ -26,8 +26,8 @@
   <div class="header">
     <div class="title">{data.name}</div>
     {#if $editMode}
-      <RemoveDeleteActions
-        rename={() => accountGroupActions.rename(data.uuid)}
+      <GreenRedActions
+        edit={[() => accountGroupActions.rename(data.uuid), "Rename"]}
         remove={() => accountGroupActions.delete(data.uuid)}
       />
     {/if}
