@@ -54,6 +54,8 @@ const persistent = await (async () => {
         accounts: {
           uuid: string;
           name: string;
+          alias?: string;
+          riotId?: string;
         }[];
       }[];
     }>("accounts", {
@@ -62,7 +64,10 @@ const persistent = await (async () => {
     }),
     ranksCache: await K<{
       version: 1;
-      entries: Record<string, { rank: Rank; division?: number; lp: number }>;
+      entries: Record<
+        string,
+        { rank: Rank; division?: number; lp: number } | "pulling" | "invalid"
+      >;
     }>("ranks_cache", { version: 1, entries: {} }),
     rawPasswords: await K<{
       version: 1;

@@ -36,22 +36,24 @@
   }}
 >
   {#if rank}
-    <img
-      alt={`${rank.rank.charAt(0).toUpperCase()}${rank.rank.slice(1)}`}
-      src={`ranks/${rank.rank}.png`}
-      class="rank-icon"
-    />
-  {:else}
-    <div
-      class="rank-icon"
-      style="display: flex; align-items: center; justify-content: center"
-    >
-      <Loader size={36} color="gray" width={3} fullRotationInSeconds={2.5} />
-    </div>
+    {#if rank === "pulling"}
+      <div
+        class="rank-icon"
+        style="display: flex; align-items: center; justify-content: center"
+      >
+        <Loader size={36} color="gray" width={3} fullRotationInSeconds={2.5} />
+      </div>
+    {:else if rank !== "invalid"}
+      <img
+        alt={`${rank.rank.charAt(0).toUpperCase()}${rank.rank.slice(1)}`}
+        src={`ranks/${rank.rank}.png`}
+        class="rank-icon"
+      />
+    {/if}
   {/if}
   <div class="info">
-    <span class="name">{data.name}</span>
-    {#if rank}
+    <span class="name">{data.alias || data.name}</span>
+    {#if typeof rank === "object"}
       <span class="rank">
         {rank.rank.charAt(0).toUpperCase()}{rank.rank.slice(1)}
         {rank.division ?? ""}
@@ -62,41 +64,44 @@
   <div class="end">
     {#if $editMode}
       <GreenRedActions
-        edit={() => accountActions.rename(data.uuid)}
+        edit={() => accountActions.edit(data.uuid)}
         remove={() => accountActions.delete(data.uuid)}
       />
-    {:else if rank}
+    {:else if data.riotId}
       <div
         class="dropdown"
         on:click={(e) => {
           e.stopPropagation();
+          if (!data.riotId) return; // shouldn't happen
+          const tag = data.riotId.replace("#", "-");
+          // TODO change region
           activeDropdown.set({
             target: e.currentTarget,
             items: [
               {
                 icon: "thirdparty/opgg.png",
                 label: "OP.GG",
-                link: "https://www.op.gg/summoners/euw/FluentCoding-000",
+                link: `https://www.op.gg/summoners/euw/${tag}`,
               },
               {
                 icon: "thirdparty/ugg.jpeg",
                 label: "U.GG",
-                link: "https://u.gg/lol/profile/euw1/FluentCoding-000",
+                link: `https://u.gg/lol/profile/euw1/${tag}`,
               },
               {
                 icon: "thirdparty/deeplol.png",
                 label: "DEEPLOL",
-                link: "https://deeplol.gg/summoner/EUW/FluentCoding-000",
+                link: `https://deeplol.gg/summoner/EUW/${tag}`,
               },
               {
                 icon: "thirdparty/log.jpg",
                 label: "LeagueOfGraphs",
-                link: "https://www.leagueofgraphs.com/summoner/euw/FluentCoding-000",
+                link: `https://www.leagueofgraphs.com/summoner/euw/${tag}`,
               },
               {
                 icon: "thirdparty/poro.png",
                 label: "Porofessor Live",
-                link: "https://porofessor.gg/live/euw/FluentCoding-000",
+                link: `https://porofessor.gg/live/euw/${tag}`,
               },
             ],
           });

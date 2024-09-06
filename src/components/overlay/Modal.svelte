@@ -1,19 +1,30 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { activeModal, showModal, type ModalType } from "../../store/app";
+  import { activeModal, showModal } from "../../store/app";
   import { clickOutside } from "../util/clickOutside";
   import { fade } from "svelte/transition";
 
   let result: NonNullable<Awaited<ReturnType<typeof showModal>>>["fields"] = {};
+  let hasAutoFocusField = false;
 
-  $: if ($activeModal)
+  $: if ($activeModal) {
     result = Object.fromEntries(
-      $activeModal.fields.map((field) => [field.id, field.default ?? ""])
+      $activeModal.fields
+        .filter((field) => "id" in field)
+        .map((field) => [field.id, field.default ?? ""])
     );
+    hasAutoFocusField = $activeModal.fields.some(
+      (field) => "id" in field && field.autoFocus
+    );
+  }
 
-  $: disabled = $activeModal?.fields.some(
-    (field) => field.required && result[field.id].trim() === ""
-  );
+  $: disabled = $activeModal?.fields
+    .filter((field) => "id" in field)
+    .some(
+      (field) =>
+        field.required &&
+        (field.trim ? result[field.id]!.trim() : result[field.id]) === ""
+    );
 
   const cancelModal = () => {
     $activeModal?.resolve(undefined);
@@ -21,7 +32,22 @@
   };
 
   const submitModal = (action: string) => {
-    $activeModal?.resolve({ action, fields: result });
+    if (!$activeModal) return;
+    const originalProperties = $activeModal.fields;
+    // post process
+    $activeModal.resolve({
+      action,
+      fields: Object.fromEntries(
+        Object.entries(result).map(([k, v]) => [
+          k,
+          originalProperties
+            .filter((field) => "id" in field)
+            .find((field) => field.id === k)?.trim
+            ? v?.trim()
+            : v,
+        ])
+      ),
+    });
   };
 
   onMount(() => {
@@ -43,33 +69,54 @@
     <div class="window">
       <div class="title">{$activeModal.title}</div>
       <div class="fields">
-        {#each $activeModal.fields as field, index (field.id)}
+        {#each $activeModal.fields as field, index ("id" in field ? field.id : ".")}
           <div class="field">
-            <label for={field.id}>{field.label}</label>
-            <!-- svelte-ignore a11y-autofocus -->
-            <input
-              autofocus={index === 0}
-              type={field.type === "text" ? "tel" : "password"}
-              id={field.id}
-              value={result[field.id]}
-              on:input={(e) => (result[field.id] = e.currentTarget.value)}
-              on:keydown={(e) => {
-                if (e.key === "Enter") {
-                  $activeModal.actions.length === 1 &&
-                    !disabled &&
-                    submitModal($activeModal.actions[0].id);
-                } else if (
-                  (e.key === "Tab" &&
-                    !e.shiftKey &&
-                    index === $activeModal.fields.length - 1) ||
-                  (e.key === "Tab" && e.shiftKey && index === 0)
-                ) {
-                  e.preventDefault();
-                }
-              }}
-              autocomplete="off"
-              spellcheck="false"
-            />
+            {#if field.type === "space"}
+              <div style="margin-top: 10px" />
+            {:else}
+              <div style="display: flex">
+                <label
+                  for={field.id}
+                  style={field.required ? "font-weight: bold" : undefined}
+                  >{field.label}{#if field.required}*{/if}
+                </label>
+                {#if field.tooltip}<span class="tooltip" title={field.tooltip}
+                    >?</span
+                  >{/if}
+              </div>
+              <!-- svelte-ignore a11y-autofocus -->
+              <input
+                autofocus={hasAutoFocusField ? field.autoFocus : index === 0}
+                type={field.type === "text" ? "tel" : "password"}
+                id={field.id}
+                value={result[field.id]}
+                placeholder={field.placeholder
+                  ? (result[
+                      $activeModal.fields
+                        .filter((entry) => "id" in entry)
+                        .find((entry) => entry.id === field.placeholder)?.id ??
+                        ""
+                    ] ?? field.placeholder)
+                  : undefined}
+                on:input={(e) => (result[field.id] = e.currentTarget.value)}
+                on:keydown={(e) => {
+                  if (e.key === "Enter") {
+                    $activeModal.actions.length === 1 &&
+                      !disabled &&
+                      submitModal($activeModal.actions[0].id);
+                  } else if (
+                    (e.key === "Tab" &&
+                      !e.shiftKey &&
+                      index === $activeModal.fields.length - 1) ||
+                    (e.key === "Tab" && e.shiftKey && index === 0)
+                  ) {
+                    e.preventDefault();
+                  }
+                }}
+                autocomplete="off"
+                spellcheck="false"
+              />
+            {/if}
           </div>
         {/each}
       </div>
@@ -134,7 +181,7 @@
           align-items: center;
           gap: 10px;
 
-          label {
+          div {
             white-space: nowrap;
             font-family: inherit;
             min-width: 30%;
@@ -146,6 +193,19 @@
             font-family: inherit;
             &:focus {
               outline: none;
+            }
+          }
+
+          .tooltip {
+            font-size: 11px;
+            border-bottom: 1px solid;
+            opacity: 70%;
+            transition: opacity 0.3s;
+            margin-left: 3px;
+            margin-right: 5px;
+
+            &:hover {
+              opacity: 100%;
             }
           }
         }

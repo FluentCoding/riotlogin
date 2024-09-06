@@ -1,8 +1,36 @@
 import persistent from "../../store/persistent";
-import { passwordStore, showModal } from "../../store/app";
+import { passwordStore, showModal, type ModalType } from "../../store/app";
 import { v4 } from "uuid";
 import toast from "svelte-french-toast";
 import { invoke } from "@tauri-apps/api/core";
+
+const accountModal = {
+  fields: [
+    {
+      type: "text",
+      label: "Username",
+      id: "name",
+      required: true,
+    },
+    { type: "password", label: "Password", id: "password", required: true },
+    { type: "space" },
+    {
+      type: "text",
+      label: "Display Name",
+      id: "alias",
+      placeholder: "name",
+      tooltip: "Name that is being displayed on the front page",
+      trim: true,
+    },
+    {
+      type: "text",
+      label: "Riot ID",
+      id: "riotId",
+      placeholder: "NAME#REGION",
+      tooltip: "Riot ID to see your in-game rank",
+    },
+  ],
+} as const satisfies Omit<ModalType, "title" | "actions">;
 
 export const accountGroupActions = {
   create: async () => {
@@ -71,11 +99,8 @@ export const accountGroupActions = {
 export const accountActions = {
   add: async (groupUuid: string) => {
     const result = await showModal({
+      ...accountModal,
       title: "Add account",
-      fields: [
-        { type: "text", label: "Username", id: "name", required: true },
-        { type: "password", label: "Password", id: "password", required: true },
-      ],
       actions: [{ label: "Add", id: "add" }],
     });
     if (!result) return;
@@ -90,27 +115,43 @@ export const accountActions = {
       toast.error("Couldn't store password :(");
       return;
     }
-    group?.accounts.push({ uuid: userUuid, name: result.fields.name });
+    group?.accounts.push({
+      uuid: userUuid,
+      name: result.fields.name,
+      alias: result.fields.alias,
+      riotId: result.fields.riotId,
+    });
     persistent.accounts.set(currentAccounts);
   },
-  rename: async (uuid: string) => {
+  edit: async (uuid: string) => {
     const currentAccounts = persistent.accounts.get();
+    const existingAccount = currentAccounts.groups
+      .map((group) => group.accounts)
+      .flat()
+      .find((account) => account.uuid === uuid);
+    if (!existingAccount) return; // something would have to be fucking wrong for this to happen
+
     const result = await showModal({
-      title: "Rename account",
-      fields: [
-        {
-          type: "text",
-          label: "Name",
-          id: "name",
-          default: currentAccounts.groups
-            .map((group) => group.accounts)
-            .flat()
-            .find((account) => account.uuid === uuid)?.name,
-          required: true,
-        },
-      ],
-      actions: [{ label: "Rename", id: "rename" }],
+      ...accountModal,
+      fields: accountModal.fields
+        .filter((field) => field.type !== "password")
+        .map((field) => {
+          if (field.type !== "space") {
+            return {
+              ...field,
+              default: {
+                name: existingAccount.name,
+                alias: existingAccount.alias,
+                riotId: existingAccount.riotId,
+              }[field.id],
+            };
+          }
+          return field;
+        }),
+      actions: [{ label: "Edit", id: "edit" }],
+      title: "Edit account",
     });
+
     if (!result) return;
     persistent.accounts.set({
       ...currentAccounts,
@@ -118,7 +159,12 @@ export const accountActions = {
         ...group,
         accounts: group.accounts.map((account) =>
           account.uuid === uuid
-            ? { ...account, name: result.fields.name }
+            ? {
+                ...account,
+                name: result.fields.name,
+                alias: result.fields.alias,
+                riotId: result.fields.riotId,
+              }
             : account
         ),
       })),

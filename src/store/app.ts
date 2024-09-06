@@ -9,12 +9,20 @@ export const activeDropdown = writable<
   | undefined
 >();
 
+interface SpaceField {
+  type: "space";
+}
+
 interface TextModalField {
   type: "text" | "password";
   id: string;
   label: string;
   default?: string;
+  autoFocus?: true;
   required?: true;
+  placeholder?: string;
+  tooltip?: string;
+  trim?: true;
 }
 
 interface ModalAction {
@@ -24,7 +32,7 @@ interface ModalAction {
 
 export interface ModalType {
   title: string;
-  fields: TextModalField[];
+  fields: (SpaceField | TextModalField)[];
   actions: ModalAction[];
 }
 
@@ -33,7 +41,14 @@ export const showModal = <const T extends ModalType>(
 ): Promise<
   | {
       action: T["actions"][number]["id"];
-      fields: Record<T["fields"][number]["id"], string>;
+      fields: {
+        [K in Extract<T["fields"][number], { id: string }>["id"]]: Extract<
+          T["fields"][number],
+          { id: K }
+        > extends { required: true }
+          ? string
+          : string | undefined;
+      };
     }
   | undefined
 > => {
