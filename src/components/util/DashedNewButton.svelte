@@ -6,7 +6,7 @@
 </script>
 
 <div class="add-new" on:click={click}>
-  <div class="icon"><Icon name="plus" /></div>
+  <div class="icon"><Icon name="plus" color="white" /></div>
   <slot />
 </div>
 
@@ -29,7 +29,6 @@
     transition: background-color 0.2s;
 
     .icon {
-      filter: invert(100%);
       display: flex; // idk why but this actually centers the icon xd (inline-block doesn't)
     }
 

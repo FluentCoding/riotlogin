@@ -3,7 +3,7 @@
   import { activeDropdown, editMode } from "../../store/app";
   import toast from "svelte-french-toast";
   import type { PullPersistentValueType } from "../../store/persistent";
-  import GreenRedActions from "./GreenRedActions.svelte";
+  import EditRemoveActions from "./EditRemoveActions.svelte";
   import { accountActions } from "../../actions/accounts/edit";
   import { fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
@@ -63,9 +63,9 @@
   </div>
   <div class="end">
     {#if $editMode}
-      <GreenRedActions
-        edit={() => accountActions.edit(data.uuid)}
-        remove={() => accountActions.delete(data.uuid)}
+      <EditRemoveActions
+        edit={[{ icon: "edit" }, () => accountActions.edit(data.uuid)]}
+        remove={[{ icon: "trash" }, () => accountActions.delete(data.uuid)]}
       />
     {:else if data.riotId}
       <div
@@ -108,7 +108,7 @@
         }}
       >
         <div class="icon">
-          <Icon name="three_dots" height="100%" width="100%" />
+          <Icon name="three_dots" color="white" height="100%" width="100%" />
         </div>
       </div>
     {/if}
@@ -167,7 +167,6 @@
 
       .icon {
         height: 100%;
-        filter: invert(100%);
         opacity: 0.8;
       }
 
