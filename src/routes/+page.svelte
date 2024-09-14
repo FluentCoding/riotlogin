@@ -27,9 +27,7 @@
   {#if disableInteractionsOverlay}
     <div
       class="disable-interactions"
-      style={$activeDropdown
-        ? "background-color: rgba(0, 0, 0, 0.2)"
-        : "background-color: rgba(0, 0, 0, 0.8)"}
+      style="background-color: rgba(0, 0, 0, {$activeDropdown ? 0.2 : 0.8})"
     />
   {/if}
   <Toaster
