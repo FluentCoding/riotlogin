@@ -48,7 +48,6 @@
     <div class="gap" />
     <AccountGroupContainer />
     <div class="gap" />
-    <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
     <div class="edit" on:click={() => editMode.set(!$editMode)}>
       {$editMode ? "Stop edit mode" : "Edit Accounts"}
     </div>

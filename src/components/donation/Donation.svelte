@@ -5,7 +5,6 @@
 <div class="container">
   Every donation helps me continue maintaining this project and keep it free for
   everyone to use, which I would greatly appreciate:
-  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
   <div
     class="kofi"
     on:click={() => open("https://github.com/tauri-apps/tauri")}

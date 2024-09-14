@@ -85,7 +85,6 @@
                     >?</span
                   >{/if}
               </div>
-              <!-- svelte-ignore a11y-autofocus -->
               <input
                 autofocus={hasAutoFocusField ? field.autoFocus : index === 0}
                 type={field.type === "text" ? "tel" : "password"}

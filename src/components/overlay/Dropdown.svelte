@@ -28,7 +28,6 @@
       transition:fade={{ duration: 150 }}
     >
       {#each $activeDropdown.items as item}
-        <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
         <div
           class="item"
           on:click={(e) => {
