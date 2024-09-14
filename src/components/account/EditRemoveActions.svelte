@@ -63,16 +63,5 @@
         outline: 2px solid grey;
       }
     }
-
-    /*.edit {
-      color: lightgreen;
-      cursor: pointer;
-      pointer-events: auto;
-    }
-    .delete {
-      color: lightcoral;
-      cursor: pointer;
-      pointer-events: auto;
-    }*/
   }
 </style>
