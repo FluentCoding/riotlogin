@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { activeModal, showModal } from "../../store/app";
+  import { activeModal } from "../../store/app";
   import { clickOutside } from "../util/clickOutside";
   import { fade } from "svelte/transition";
+  import type { showModal } from "./modal";
 
   let result: NonNullable<Awaited<ReturnType<typeof showModal>>>["fields"] = {};
   let hasAutoFocusField = false;
@@ -124,6 +125,9 @@
         {#each $activeModal.actions as action}
           <button
             class="action"
+            style={"color" in action
+              ? `color: ${action.color}; outline: 2px solid ${action.color}`
+              : undefined}
             {disabled}
             on:click={() => submitModal(action.id)}>{action.label}</button
           >
@@ -221,6 +225,14 @@
           border-radius: 4px;
           padding: 5px;
           font-family: inherit;
+
+          &:not([disabled]) {
+            cursor: pointer;
+
+            &:hover {
+              opacity: 0.9;
+            }
+          }
         }
       }
     }

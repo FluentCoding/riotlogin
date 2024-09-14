@@ -1,8 +1,13 @@
 import persistent from "../../store/persistent";
-import { passwordStore, showModal, type ModalType } from "../../store/app";
+import { passwordStore } from "../../store/app";
 import { v4 } from "uuid";
 import toast from "svelte-french-toast";
 import { invoke } from "@tauri-apps/api/core";
+import {
+  showCommonModal,
+  showModal,
+  type ModalType,
+} from "../../components/overlay/modal";
 
 const accountModal = {
   fields: [
@@ -76,33 +81,23 @@ export const accountGroupActions = {
     });
   },
   delete: async (uuid: string) => {
-    const result = await showModal({
-      title: "Are you sure?",
-      fields: [],
-      actions: [
-        { label: "Delete", id: "delete" },
-        { label: "Cancel", id: "cancel" },
-      ],
-    });
-    if (!result || result.action === "cancel") return;
+    if (!(await showCommonModal("confirmDelete"))) return;
 
     const currentAccounts = persistent.accounts.get();
     const removedGroup = currentAccounts.groups.find(
       (group) => group.uuid === uuid
     );
-    if (removedGroup) {
-      await Promise.all(
-        removedGroup.accounts.map((account) =>
-          passwordStore.removePassword(account.uuid)
-        )
-      );
-      persistent.accounts.set({
-        ...currentAccounts,
-        groups: currentAccounts.groups.filter(
-          (group) => group !== removedGroup
-        ),
-      });
-    }
+    if (!removedGroup) return;
+
+    await Promise.all(
+      removedGroup.accounts.map((account) =>
+        passwordStore.removePassword(account.uuid)
+      )
+    );
+    persistent.accounts.set({
+      ...currentAccounts,
+      groups: currentAccounts.groups.filter((group) => group !== removedGroup),
+    });
   },
 };
 
@@ -181,15 +176,7 @@ export const accountActions = {
     });
   },
   delete: async (uuid: string) => {
-    const result = await showModal({
-      title: "Are you sure?",
-      fields: [],
-      actions: [
-        { label: "Delete", id: "delete" },
-        { label: "Cancel", id: "cancel" },
-      ],
-    });
-    if (!result || result.action === "cancel") return;
+    if (!(await showCommonModal("confirmDelete"))) return;
 
     const currentAccounts = persistent.accounts.get();
     if (!(await passwordStore.removePassword(uuid))) {
