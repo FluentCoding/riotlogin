@@ -4,7 +4,7 @@
   import toast from "svelte-french-toast";
   import type { PullPersistentValueType } from "../../store/persistent";
   import EditRemoveActions from "./EditRemoveActions.svelte";
-  import { accountActions } from "../../actions/accounts/edit";
+  import { accountActions } from "../../actions/accounts";
   import { fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import persistent from "../../store/persistent";

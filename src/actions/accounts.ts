@@ -1,5 +1,5 @@
-import persistent from "../../store/persistent";
-import { passwordStore } from "../../store/app";
+import persistent from "../store/persistent";
+import { passwordStore } from "../store/app";
 import { v4 } from "uuid";
 import toast from "svelte-french-toast";
 import { invoke } from "@tauri-apps/api/core";
@@ -7,7 +7,7 @@ import {
   showCommonModal,
   showModal,
   type ModalType,
-} from "../../components/overlay/modal";
+} from "../components/overlay/modal";
 
 const accountModal = {
   fields: [

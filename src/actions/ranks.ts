@@ -1,5 +1,5 @@
-import persistent from "../../store/persistent";
-import periodicAction from "../utils/periodic";
+import persistent from "../store/persistent";
+import periodicAction from "./utils/periodic";
 
 const pullAction = periodicAction(() => {
   console.info("Pulling ranks");

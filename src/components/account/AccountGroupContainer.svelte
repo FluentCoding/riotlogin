@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { accountGroupActions } from "../../actions/accounts/edit";
+  import { accountGroupActions } from "../../actions/accounts";
   import persistent from "../../store/persistent";
   import { editMode } from "../../store/app";
   import AccountGroup from "./AccountGroup.svelte";

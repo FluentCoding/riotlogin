@@ -12,7 +12,7 @@
   import AccountGroupContainer from "../components/account/AccountGroupContainer.svelte";
   import { exit } from "@tauri-apps/plugin-process";
   import { onMount } from "svelte";
-  import pullAction from "../actions/ranks/pull";
+  import pullAction from "../actions/ranks";
 
   $: disableInteractionsOverlay =
     $activeDropdown !== undefined || $activeModal !== undefined;

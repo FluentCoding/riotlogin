@@ -1,9 +1,6 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import {
-    accountActions,
-    accountGroupActions,
-  } from "../../actions/accounts/edit";
+  import { accountActions, accountGroupActions } from "../../actions/accounts";
   import type { PullPersistentValueType } from "../../store/persistent";
   import { editMode } from "../../store/app";
   import DashedNewButton from "../util/DashedNewButton.svelte";
