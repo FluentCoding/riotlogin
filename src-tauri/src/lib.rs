@@ -20,9 +20,6 @@ fn setup_window(app: &AppHandle) {
     let logical_size = window.outer_size().unwrap();
     let taskbar_size = get_taskbar_size().unwrap();
 
-    // 46px 1080p 60px 1440p
-    // TODO FIGURE OUT HOW TO RETRIEVE PROPER TASKBAR SIZE ON SCREEN :)
-
     println!(
         "\nScreen Pos X{} Y{}",
         screen.position().x,
@@ -48,8 +45,7 @@ fn setup_window(app: &AppHandle) {
         y: f64::from(screen_position.y)
             + (f64::from(screen_size.height) - f64::from(logical_size.height))
                 / screen.scale_factor()
-            - f64::from(taskbar_size.bottom - taskbar_size.top)
-            + 10.,
+            - (f64::from(taskbar_size.bottom - taskbar_size.top)) / screen.scale_factor(),
     };
     println!(
         "Result Pos  X{} Y{}",
