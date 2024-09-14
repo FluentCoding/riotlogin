@@ -17,6 +17,7 @@ fn setup_window(app: &AppHandle) {
     let screen = window.primary_monitor().unwrap().unwrap();
     let screen_position = screen.position();
     let screen_size = screen.size();
+    let screen_scale_factor = screen.scale_factor();
     let logical_size = window.outer_size().unwrap();
     let taskbar_size = get_taskbar_size().unwrap();
 
@@ -40,12 +41,11 @@ fn setup_window(app: &AppHandle) {
     );
     let logical_position = tauri::LogicalPosition {
         x: f64::from(screen_position.x)
-            + (f64::from(screen_size.width) - f64::from(logical_size.width))
-                / screen.scale_factor(),
+            + f64::from(screen_size.width - logical_size.width) / screen_scale_factor,
         y: f64::from(screen_position.y)
-            + (f64::from(screen_size.height) - f64::from(logical_size.height))
-                / screen.scale_factor()
-            - (f64::from(taskbar_size.bottom - taskbar_size.top)) / screen.scale_factor(),
+            + (f64::from(screen_size.height - logical_size.height)
+                - f64::from(taskbar_size.bottom - taskbar_size.top))
+                / screen_scale_factor,
     };
     println!(
         "Result Pos  X{} Y{}",
