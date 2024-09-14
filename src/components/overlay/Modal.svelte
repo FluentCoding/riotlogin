@@ -212,7 +212,9 @@
       }
 
       .actions {
+        display: flex;
         margin-top: 10px;
+        gap: 5px;
 
         .action {
           border: 0;

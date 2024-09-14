@@ -76,6 +76,16 @@ export const accountGroupActions = {
     });
   },
   delete: async (uuid: string) => {
+    const result = await showModal({
+      title: "Are you sure?",
+      fields: [],
+      actions: [
+        { label: "Delete", id: "delete" },
+        { label: "Cancel", id: "cancel" },
+      ],
+    });
+    if (!result || result.action === "cancel") return;
+
     const currentAccounts = persistent.accounts.get();
     const removedGroup = currentAccounts.groups.find(
       (group) => group.uuid === uuid
@@ -171,6 +181,16 @@ export const accountActions = {
     });
   },
   delete: async (uuid: string) => {
+    const result = await showModal({
+      title: "Are you sure?",
+      fields: [],
+      actions: [
+        { label: "Delete", id: "delete" },
+        { label: "Cancel", id: "cancel" },
+      ],
+    });
+    if (!result || result.action === "cancel") return;
+
     const currentAccounts = persistent.accounts.get();
     if (!(await passwordStore.removePassword(uuid))) {
       toast.error("Couldn't remove password :(");
