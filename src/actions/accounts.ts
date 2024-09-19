@@ -8,6 +8,7 @@ import {
   showModal,
   type ModalType,
 } from "../components/overlay/modal";
+import pullAction from "./ranks";
 
 const accountModal = {
   fields: [
@@ -33,6 +34,7 @@ const accountModal = {
       id: "riotId",
       placeholder: "NAME#REGION",
       tooltip: "Riot ID to see your in-game rank",
+      trim: true,
     },
   ],
 } as const satisfies Omit<ModalType, "title" | "actions">;
@@ -127,6 +129,9 @@ export const accountActions = {
       riotId: result.fields.riotId,
     });
     persistent.accounts.set(currentAccounts);
+    if (result.fields.riotId) {
+      pullAction.action(); // schedule pull action
+    }
   },
   edit: async (uuid: string) => {
     const currentAccounts = persistent.accounts.get();
@@ -174,6 +179,25 @@ export const accountActions = {
         ),
       })),
     });
+    if (
+      result.fields.riotId &&
+      result.fields.riotId !== existingAccount.riotId
+    ) {
+      pullAction.mutex
+        .runExclusive(async () => {
+          const oldCache = persistent.ranksCache.get();
+          await persistent.ranksCache.set({
+            ...oldCache,
+            entries: Object.fromEntries(
+              // remove deleted accounts
+              Object.entries(oldCache.entries).filter(
+                (entry) => entry[0] !== uuid
+              )
+            ),
+          });
+        })
+        .then(() => pullAction.action()); // schedule pull action
+    }
   },
   delete: async (uuid: string) => {
     if (!(await showCommonModal("confirmDelete"))) return;

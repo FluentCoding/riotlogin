@@ -17,6 +17,9 @@ type Rank =
   | "grandmaster"
   | "challenger";
 
+export type AccountType = AccountGroupType["accounts"][0];
+export type AccountGroupType = PullPersistentValueType<"accounts">["groups"][0];
+
 export type PullPersistentValueType<T extends keyof typeof persistent> =
   Awaited<ReturnType<(typeof persistent)[T]["get"]>>;
 
@@ -66,7 +69,10 @@ const persistent = await (async () => {
       version: 1;
       entries: Record<
         string,
-        { rank: Rank; division?: number; lp: number } | "pulling" | "invalid"
+        {
+          rank: { tier: Rank; division?: number; lp: number };
+          lastTimePulled: number;
+        }
       >;
     }>("ranks_cache", { version: 1, entries: {} }),
     rawPasswords: await K<{

@@ -18,8 +18,8 @@
     $activeDropdown !== undefined || $activeModal !== undefined;
 
   onMount(() => {
-    pullAction.start(2000);
-    return () => pullAction.stop();
+    pullAction.start();
+    return pullAction.stop;
   });
 </script>
 
@@ -41,6 +41,7 @@
   <Dropdown />
   <div class="container">
     <div class="header">
+      <!-- <div class="settings" on:click={() => {}}>Settings</div> -->
       <div class="exit" on:click={() => exit()}>Exit</div>
     </div>
     <div class="credits">by @fluentcoding</div>
@@ -87,16 +88,29 @@
     .header {
       display: flex;
       justify-content: end;
-      .exit {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+      gap: 5px;
+
+      div {
+        text-align: center;
         font-size: 12px;
         border-radius: 10px;
+        cursor: pointer;
+      }
+
+      .settings {
+        width: 50px;
+        padding: 5px 10px;
+        background-color: #323232;
+
+        &:hover {
+          outline: 2px solid lightblue;
+        }
+      }
+
+      .exit {
         width: 30px;
         padding: 5px;
         background-color: #323232;
-        cursor: pointer;
 
         &:hover {
           outline: 2px solid lightcoral;

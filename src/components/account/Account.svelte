@@ -2,15 +2,16 @@
   import Icon from "../util/Icon.svelte";
   import { activeDropdown, editMode } from "../../store/app";
   import toast from "svelte-french-toast";
-  import type { PullPersistentValueType } from "../../store/persistent";
+  import type { AccountType } from "../../store/persistent";
   import EditRemoveActions from "./EditRemoveActions.svelte";
   import { accountActions } from "../../actions/accounts";
   import { fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
   import persistent from "../../store/persistent";
   import Loader from "../util/Loader.svelte";
+  import pullAction, { fetchRankViewURLs } from "../../actions/ranks";
 
-  export let data: PullPersistentValueType<"accounts">["groups"][0]["accounts"][0];
+  export let data: AccountType;
 
   const login = async () => {
     toast.promise(accountActions.login(data.uuid), {
@@ -21,7 +22,8 @@
   };
 
   const ranksCache = persistent.ranksCache;
-  $: rank = $ranksCache.entries[data.uuid];
+  const currentlyPulledAccounts = pullAction.store.currentlyPulledAccounts;
+  $: rank = $ranksCache.entries[data.uuid]?.rank;
 </script>
 
 <div
@@ -35,27 +37,25 @@
     easing: quintOut,
   }}
 >
-  {#if rank}
-    {#if rank === "pulling"}
-      <div
-        class="rank-icon"
-        style="display: flex; align-items: center; justify-content: center"
-      >
-        <Loader size={36} color="gray" width={3} fullRotationInSeconds={2.5} />
-      </div>
-    {:else if rank !== "invalid"}
-      <img
-        alt={`${rank.rank.charAt(0).toUpperCase()}${rank.rank.slice(1)}`}
-        src={`ranks/${rank.rank}.png`}
-        class="rank-icon"
-      />
-    {/if}
+  {#if $currentlyPulledAccounts.includes(data.uuid)}
+    <div
+      class="rank-icon"
+      style="display: flex; align-items: center; justify-content: center"
+    >
+      <Loader size={36} color="gray" width={3} fullRotationInSeconds={2.5} />
+    </div>
+  {:else if rank}
+    <img
+      alt={`${rank.tier.charAt(0).toUpperCase()}${rank.tier.slice(1)}`}
+      src={`ranks/${rank.tier}.png`}
+      class="rank-icon"
+    />
   {/if}
   <div class="info">
     <span class="name">{data.alias || data.name}</span>
     {#if typeof rank === "object"}
       <span class="rank">
-        {rank.rank.charAt(0).toUpperCase()}{rank.rank.slice(1)}
+        {rank.tier.charAt(0).toUpperCase()}{rank.tier.slice(1)}
         {rank.division ?? ""}
         {rank.lp}LP
       </span>
@@ -73,37 +73,9 @@
         on:click={(e) => {
           e.stopPropagation();
           if (!data.riotId) return; // shouldn't happen
-          const tag = data.riotId.replace("#", "-");
-          // TODO change region
           activeDropdown.set({
             target: e.currentTarget,
-            items: [
-              {
-                icon: "thirdparty/opgg.png",
-                label: "OP.GG",
-                link: `https://www.op.gg/summoners/euw/${tag}`,
-              },
-              {
-                icon: "thirdparty/ugg.jpeg",
-                label: "U.GG",
-                link: `https://u.gg/lol/profile/euw1/${tag}`,
-              },
-              {
-                icon: "thirdparty/deeplol.png",
-                label: "DEEPLOL",
-                link: `https://deeplol.gg/summoner/EUW/${tag}`,
-              },
-              {
-                icon: "thirdparty/log.jpg",
-                label: "LeagueOfGraphs",
-                link: `https://www.leagueofgraphs.com/summoner/euw/${tag}`,
-              },
-              {
-                icon: "thirdparty/poro.png",
-                label: "Porofessor Live",
-                link: `https://porofessor.gg/live/euw/${tag}`,
-              },
-            ],
+            items: Object.values(fetchRankViewURLs(data.riotId)),
           });
         }}
       >

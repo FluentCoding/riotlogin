@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { MouseEventHandler } from "svelte/elements";
   import Icon from "./Icon.svelte";
+  import { fade } from "svelte/transition";
 
   export let click: MouseEventHandler<HTMLDivElement>;
 </script>
 
-<div class="add-new" on:click={click}>
+<div class="add-new" on:click={click} transition:fade={{ duration: 150 }}>
   <div class="icon"><Icon name="plus" color="white" /></div>
   <slot />
 </div>

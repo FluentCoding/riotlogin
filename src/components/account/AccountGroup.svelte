@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { fly } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
   import { accountActions, accountGroupActions } from "../../actions/accounts";
-  import type { PullPersistentValueType } from "../../store/persistent";
+  import type { AccountGroupType } from "../../store/persistent";
   import { editMode } from "../../store/app";
   import DashedNewButton from "../util/DashedNewButton.svelte";
   import Account from "./Account.svelte";
   import { quintOut } from "svelte/easing";
   import EditRemoveActions from "./EditRemoveActions.svelte";
 
-  export let data: PullPersistentValueType<"accounts">["groups"][0];
+  export let data: AccountGroupType;
 </script>
 
 <div
@@ -23,13 +23,15 @@
   <div class="header">
     <div class="title">{data.name}</div>
     {#if $editMode}
-      <EditRemoveActions
-        edit={[
-          { label: "Rename" },
-          () => accountGroupActions.rename(data.uuid),
-        ]}
-        remove={() => accountGroupActions.delete(data.uuid)}
-      />
+      <div transition:fade={{ duration: 150 }}>
+        <EditRemoveActions
+          edit={[
+            { label: "Rename" },
+            () => accountGroupActions.rename(data.uuid),
+          ]}
+          remove={() => accountGroupActions.delete(data.uuid)}
+        />
+      </div>
     {/if}
   </div>
   <div class="accounts">
