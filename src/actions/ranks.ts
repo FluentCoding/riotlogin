@@ -75,15 +75,13 @@ const pullAction = {
         const cache = persistent.ranksCache.get();
 
         {
-          let result;
-
           const accountsToUpdate = accounts
             .filter((account) => account.riotId !== undefined)
             .filter(
               (account) =>
                 !(account.uuid in cache.entries) ||
                 Date.now() - cache.entries[account.uuid].lastTimePulled >
-                  RANK_UPDATE_PERIOD
+                  RANK_UPDATE_PERIOD - 5000 // 5s tolerance
             );
 
           if (accountsToUpdate.length > 0) {
@@ -97,6 +95,7 @@ const pullAction = {
               accountsToUpdate.map((account) => account.uuid)
             );
 
+            let result;
             try {
               result = await (
                 await fetch("http://localhost:3000/ranks", {
@@ -123,12 +122,12 @@ const pullAction = {
             if (result) {
               // todo zod or elysia eden
               for (const entry of result) {
-                if (typeof entry === "object") {
-                  cache.entries[entry.uuid] = {
-                    rank: entry,
-                    lastTimePulled: Date.now(),
-                  };
-                }
+                if ("error" in entry) continue;
+
+                cache.entries[entry.uuid] = {
+                  rank: entry,
+                  lastTimePulled: Date.now(),
+                };
               }
             }
           }

@@ -58,7 +58,7 @@
       <span class="rank">
         {rank.tier.charAt(0).toUpperCase()}{rank.tier.slice(1)}
         {rank.division ?? ""}
-        {rank.lp}LP
+        {rank.lp !== undefined ? `${rank.lp} LP` : ""}
       </span>
     {/if}
   </div>

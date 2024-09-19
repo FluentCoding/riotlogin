@@ -72,7 +72,7 @@ const persistent = await (async () => {
       entries: Record<
         string,
         {
-          rank: { tier: Rank; division?: number; lp: number };
+          rank: { tier: Rank; division?: number; lp?: number };
           lastTimePulled: number;
         }
       >;
