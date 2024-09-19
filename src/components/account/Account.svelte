@@ -53,7 +53,7 @@
   {/if}
   <div class="info">
     <span class="name">{data.alias || data.name}</span>
-    {#if typeof rank === "object"}
+    {#if rank}
       <span class="rank">
         {rank.tier.charAt(0).toUpperCase()}{rank.tier.slice(1)}
         {rank.division ?? ""}
