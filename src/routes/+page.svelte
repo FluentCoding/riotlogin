@@ -44,8 +44,7 @@
       <!-- <div class="settings" on:click={() => {}}>Settings</div> -->
       <div class="exit" on:click={() => exit()}>Exit</div>
     </div>
-    <div class="credits">by @fluentcoding</div>
-    <div class="title">Riot Account Manager</div>
+    <div class="title">RiotLogin</div>
     <div class="gap" />
     <AccountGroupContainer />
     <div class="gap" />
@@ -118,20 +117,14 @@
       }
     }
 
-    .credits {
-      font-size: 13px;
-      font-weight: 300;
-      color: #a9a9a9;
-      margin-bottom: 5px;
-    }
-
     .title {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 600;
+      color: #d5d5d5;
     }
 
     .gap {
-      margin-top: 15px;
+      margin-top: 14px;
     }
 
     .fill-remaining-height {
