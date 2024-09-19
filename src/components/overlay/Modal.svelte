@@ -123,6 +123,16 @@
                   autofocus={hasAutoFocusField ? field.autoFocus : index === 0}
                   id={field.id}
                   on:change={(e) => (result[field.id] = e.currentTarget.value)}
+                  on:keydown={(e) => {
+                    if (
+                      (e.key === "Tab" &&
+                        !e.shiftKey &&
+                        index === $activeModal.fields.length - 1) ||
+                      (e.key === "Tab" && e.shiftKey && index === 0)
+                    ) {
+                      e.preventDefault();
+                    }
+                  }}
                 >
                   {#each field.values as option}
                     <option
@@ -221,7 +231,7 @@
             font-family: inherit;
             font-size: 13px;
             &:focus {
-              outline: none;
+              outline: 1px solid white;
             }
           }
 

@@ -1,11 +1,13 @@
-# Frontend
+# Client
 
+- Drag & Drop Groups/Accounts in edit mode
 - Settings (e.g. select match history providers, autostart)
-
-# Backend
-
 - Store account passwords in operating system keychain
-- Rate-limited (per IP + DDoS protection) league rank endpoint for many accounts
+- Auto-Update implementation
+
+# Server
+
+- Rate-limited (per IP + DDoS protection) ranks endpoint
 - Update server static JSON hosting
 
 # Login
@@ -13,17 +15,18 @@
 - Handle inactivity modal
 - Handle incorrect credentials popout (purple)
 
-# Before Publish
+# Prerelease
 
 - Obfuscation
 - Landing page + domain + webhosting (maybe hetzner)
 - KoFi and Patreon (maybe PayPal)
 - GitHub Action for windows releases
 
-# After release
+# Postrelease
 
 - Optional tab group on top for all games (only support league for now)
-- Color themes
+- Show other ranks than SoloQ
+- Color Themes
 - Code overhaul (a lot of code has been rushed to get it close to release without prioritizing modularity or even quality)
   - especially in modal code
   - should add typesafe backend communication or at least zod to validate the response

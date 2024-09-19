@@ -18,7 +18,12 @@
 
 <style lang="scss">
   .container {
-    background-color: #2a2a2a;
+    background: rgb(42, 42, 42);
+    background: linear-gradient(
+      63deg,
+      rgba(42, 42, 42, 1) 0%,
+      rgba(27, 27, 27, 1) 100%
+    );
     border-radius: 10px;
     padding: 10px;
     color: #d5d5d5;
@@ -34,6 +39,7 @@
       margin-top: 10px;
       img {
         height: 50px;
+        opacity: 0.8;
         &:hover {
           cursor: pointer;
         }
