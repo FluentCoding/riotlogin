@@ -2,35 +2,58 @@ import { Mutex } from "async-mutex";
 import persistent, { type AccountType } from "../store/persistent";
 import periodicAction from "./utils/periodic";
 import { writable, type Writable } from "svelte/store";
+import type { RiotRegion } from "../components/util/riot";
 
 const RANK_UPDATE_PERIOD = 1000 * 60 * 60;
-export const fetchRankViewURLs = (riotId: string) => {
+export const fetchRankViewURLs = (riotId: string, region: string) => {
   const tag = riotId.replace("#", "-");
   return {
     opgg: {
       icon: "thirdparty/opgg.png",
       label: "OP.GG",
-      link: `https://www.op.gg/summoners/euw/${tag}`,
+      link: `https://www.op.gg/summoners/${region}/${tag}`,
     },
     ugg: {
       icon: "thirdparty/ugg.jpeg",
       label: "U.GG",
-      link: `https://u.gg/lol/profile/euw1/${tag}`,
+      link: `https://u.gg/lol/profile/${
+        (
+          {
+            na: "na1",
+            me: "me1",
+            euw: "euw1",
+            eune: "eune",
+            oce: "oc1",
+            kr: "kr",
+            jp: "jp1",
+            br: "br1",
+            las: "la2",
+            lan: "la1",
+            ru: "ru",
+            tr: "tr1",
+            sg: "sg2",
+            ph: "ph2",
+            tw: "tw2",
+            vn: "vn2",
+            th: "th2",
+          } satisfies Record<RiotRegion, string>
+        )[region]
+      }/${tag}`,
     },
     deeplol: {
       icon: "thirdparty/deeplol.png",
       label: "DEEPLOL",
-      link: `https://deeplol.gg/summoner/EUW/${tag}`,
+      link: `https://deeplol.gg/summoner/${region}/${tag}`,
     },
     log: {
       icon: "thirdparty/log.jpg",
       label: "LeagueOfGraphs",
-      link: `https://www.leagueofgraphs.com/summoner/euw/${tag}`,
+      link: `https://www.leagueofgraphs.com/summoner/${region}/${tag}`,
     },
     poro: {
       icon: "thirdparty/poro.png",
       label: "Porofessor Live",
-      link: `https://porofessor.gg/live/euw/${tag}`,
+      link: `https://porofessor.gg/live/${region}/${tag}`,
     },
   };
 };
@@ -85,7 +108,7 @@ const pullAction = {
                     accounts: accountsToUpdate.map((account) => ({
                       uuid: account.uuid,
                       riotId: account.riotId,
-                      region: "euw",
+                      region: account.region,
                     })),
                   }),
                 })

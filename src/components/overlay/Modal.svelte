@@ -3,7 +3,7 @@
   import { activeModal } from "../../store/app";
   import { clickOutside } from "../util/clickOutside";
   import { fade } from "svelte/transition";
-  import type { showModal } from "./modal";
+  import type { showModal, TextModalField } from "./modal";
 
   let result: NonNullable<Awaited<ReturnType<typeof showModal>>>["fields"] = {};
   let hasAutoFocusField = false;
@@ -15,7 +15,7 @@
         .map((field) => [field.id, field.default ?? ""])
     );
     hasAutoFocusField = $activeModal.fields.some(
-      (field) => "id" in field && field.autoFocus
+      (field) => "autoFocus" in field && field.autoFocus
     );
   }
 
@@ -24,6 +24,7 @@
     .some(
       (field) =>
         field.required &&
+        "trim" in field &&
         (field.trim ? result[field.id]!.trim() : result[field.id]) === ""
     );
 
@@ -42,7 +43,7 @@
         Object.entries(result).map(([k, v]) => [
           k,
           originalProperties
-            .filter((field) => "id" in field)
+            .filter((field): field is TextModalField => "trim" in field)
             .find((field) => field.id === k)?.trim
             ? v?.trim()
             : v,
@@ -85,37 +86,53 @@
                     >?</span
                   >{/if}
               </div>
-              <input
-                autofocus={hasAutoFocusField ? field.autoFocus : index === 0}
-                type={field.type === "text" ? "tel" : "password"}
-                id={field.id}
-                value={result[field.id]}
-                placeholder={field.placeholder
-                  ? (result[
-                      $activeModal.fields
-                        .filter((entry) => "id" in entry)
-                        .find((entry) => entry.id === field.placeholder)?.id ??
-                        ""
-                    ] ?? field.placeholder)
-                  : undefined}
-                on:input={(e) => (result[field.id] = e.currentTarget.value)}
-                on:keydown={(e) => {
-                  if (e.key === "Enter") {
-                    $activeModal.actions.length === 1 &&
-                      !disabled &&
-                      submitModal($activeModal.actions[0].id);
-                  } else if (
-                    (e.key === "Tab" &&
-                      !e.shiftKey &&
-                      index === $activeModal.fields.length - 1) ||
-                    (e.key === "Tab" && e.shiftKey && index === 0)
-                  ) {
-                    e.preventDefault();
-                  }
-                }}
-                autocomplete="off"
-                spellcheck="false"
-              />
+              {#if field.type === "text" || field.type === "password"}
+                <input
+                  autofocus={hasAutoFocusField ? field.autoFocus : index === 0}
+                  type={field.type === "text" ? "tel" : "password"}
+                  id={field.id}
+                  value={result[field.id]}
+                  placeholder={field.placeholder
+                    ? (result[
+                        $activeModal.fields
+                          .filter((entry) => "id" in entry)
+                          .find((entry) => entry.id === field.placeholder)
+                          ?.id ?? ""
+                      ] ?? field.placeholder)
+                    : undefined}
+                  on:input={(e) => (result[field.id] = e.currentTarget.value)}
+                  on:keydown={(e) => {
+                    if (e.key === "Enter") {
+                      $activeModal.actions.length === 1 &&
+                        !disabled &&
+                        submitModal($activeModal.actions[0].id);
+                    } else if (
+                      (e.key === "Tab" &&
+                        !e.shiftKey &&
+                        index === $activeModal.fields.length - 1) ||
+                      (e.key === "Tab" && e.shiftKey && index === 0)
+                    ) {
+                      e.preventDefault();
+                    }
+                  }}
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              {:else if field.type === "select"}
+                <select
+                  autofocus={hasAutoFocusField ? field.autoFocus : index === 0}
+                  id={field.id}
+                  on:change={(e) => (result[field.id] = e.currentTarget.value)}
+                >
+                  {#each field.values as option}
+                    <option
+                      value={option[0]}
+                      selected={result[field.id] === option[0]}
+                      >{option[1]}</option
+                    >
+                  {/each}
+                </select>
+              {/if}
             {/if}
           </div>
         {/each}
@@ -194,6 +211,15 @@
             width: 100%;
             box-sizing: border-box;
             font-family: inherit;
+            &:focus {
+              outline: none;
+            }
+          }
+
+          select {
+            width: 100%;
+            font-family: inherit;
+            font-size: 13px;
             &:focus {
               outline: none;
             }

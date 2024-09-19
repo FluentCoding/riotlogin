@@ -9,6 +9,7 @@ import {
   type ModalType,
 } from "../components/overlay/modal";
 import pullAction from "./ranks";
+import type { RiotRegion } from "../components/util/riot";
 
 const accountModal = {
   fields: [
@@ -32,9 +33,34 @@ const accountModal = {
       type: "text",
       label: "Riot ID",
       id: "riotId",
-      placeholder: "NAME#REGION",
+      placeholder: "Name#Region",
       tooltip: "Riot ID to see your in-game rank",
       trim: true,
+    },
+    {
+      type: "select",
+      label: "Region",
+      id: "region",
+      default: "na",
+      values: [
+        ["na", "[NA] North America"],
+        ["me", "[ME] Middle East"],
+        ["euw", "[EUW] Europe West"],
+        ["eune", "[EUNE] Europe Nordic East"],
+        ["oce", "[OCE] Oceania"],
+        ["kr", "[KR] Korea"],
+        ["jp", "[JP] Japan"],
+        ["br", "[BR] Brazil"],
+        ["las", "[LAS] Latin America South"],
+        ["lan", "[LAN] Latin America North"],
+        ["ru", "[RU] Russia"],
+        ["tr", "[TR] Türkiye"],
+        ["sg", "[SG] Singapore"],
+        ["ph", "[PH] Philippines"],
+        ["tw", "[TW] Taiwan"],
+        ["vn", "[VN] Vietnam"],
+        ["th", "[TH] Thailand"],
+      ] satisfies [RiotRegion, string][],
     },
   ],
 } as const satisfies Omit<ModalType, "title" | "actions">;
@@ -127,6 +153,7 @@ export const accountActions = {
       name: result.fields.name,
       alias: result.fields.alias,
       riotId: result.fields.riotId,
+      region: result.fields.region as RiotRegion,
     });
     persistent.accounts.set(currentAccounts);
     if (result.fields.riotId) {
@@ -153,6 +180,7 @@ export const accountActions = {
                 name: existingAccount.name,
                 alias: existingAccount.alias,
                 riotId: existingAccount.riotId,
+                region: existingAccount.region,
               }[field.id],
             };
           }
@@ -174,14 +202,16 @@ export const accountActions = {
                 name: result.fields.name,
                 alias: result.fields.alias,
                 riotId: result.fields.riotId,
+                region: result.fields.region as RiotRegion,
               }
             : account
         ),
       })),
     });
+    // remove from cache and trigger update when region or riot id changes
     if (
-      result.fields.riotId &&
-      result.fields.riotId !== existingAccount.riotId
+      result.fields.region !== existingAccount.region ||
+      (result.fields.riotId && result.fields.riotId !== existingAccount.riotId)
     ) {
       pullAction.mutex
         .runExclusive(async () => {

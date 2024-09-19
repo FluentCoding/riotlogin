@@ -23,6 +23,7 @@
 
   const ranksCache = persistent.ranksCache;
   const currentlyPulledAccounts = pullAction.store.currentlyPulledAccounts;
+  $: isPulled = $currentlyPulledAccounts.includes(data.uuid);
   $: rank = $ranksCache.entries[data.uuid]?.rank;
 </script>
 
@@ -37,7 +38,7 @@
     easing: quintOut,
   }}
 >
-  {#if $currentlyPulledAccounts.includes(data.uuid)}
+  {#if isPulled}
     <div
       class="rank-icon"
       style="display: flex; align-items: center; justify-content: center"
@@ -64,6 +65,7 @@
   <div class="end">
     {#if $editMode}
       <EditRemoveActions
+        disabled={isPulled}
         edit={[{ icon: "edit" }, () => accountActions.edit(data.uuid)]}
         remove={[{ icon: "trash" }, () => accountActions.delete(data.uuid)]}
       />
@@ -72,10 +74,10 @@
         class="dropdown"
         on:click={(e) => {
           e.stopPropagation();
-          if (!data.riotId) return; // shouldn't happen
+          if (!data.riotId || !data.region) return; // shouldn't happen
           activeDropdown.set({
             target: e.currentTarget,
-            items: Object.values(fetchRankViewURLs(data.riotId)),
+            items: Object.values(fetchRankViewURLs(data.riotId, data.region)),
           });
         }}
       >

@@ -1,20 +1,28 @@
 import { activeModal } from "../../store/app";
 
-interface SpaceField {
-  type: "space";
-}
-
-interface TextModalField {
-  type: "text" | "password";
+interface InputModalField {
   id: string;
+  required?: true;
+  tooltip?: string;
   label: string;
   default?: string;
   autoFocus?: true;
-  required?: true;
-  placeholder?: string;
-  tooltip?: string;
-  trim?: true;
 }
+
+export type SpaceModalField = {
+  type: "space";
+};
+
+export type TextModalField = InputModalField & {
+  type: "text" | "password";
+  placeholder?: string;
+  trim?: true;
+};
+
+export type SelectModalField = InputModalField & {
+  type: "select";
+  values: [string, string][];
+};
 
 interface ModalAction {
   id: string;
@@ -24,7 +32,7 @@ interface ModalAction {
 
 export interface ModalType {
   title: string;
-  fields: (SpaceField | TextModalField)[];
+  fields: (SpaceModalField | TextModalField | SelectModalField)[];
   actions: ModalAction[];
 }
 

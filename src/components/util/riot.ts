@@ -1,0 +1,18 @@
+export type RiotRegion =
+  | "na"
+  | "me"
+  | "euw"
+  | "eune"
+  | "oce"
+  | "kr"
+  | "jp"
+  | "br"
+  | "las"
+  | "lan"
+  | "ru"
+  | "tr"
+  | "sg"
+  | "ph"
+  | "tw"
+  | "vn"
+  | "th";

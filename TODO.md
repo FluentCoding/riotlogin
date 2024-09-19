@@ -1,7 +1,5 @@
 # Frontend
 
-- Cache-store (account id <-> latest pulled rank entry together with pull timestamp)
-- Pull account ranks periodically
 - Settings (e.g. select match history providers, autostart)
 
 # Backend
@@ -26,3 +24,6 @@
 
 - Optional tab group on top for all games (only support league for now)
 - Color themes
+- Code overhaul (a lot of code has been rushed to get it close to release without prioritizing modularity or even quality)
+  - especially in modal code
+  - should add typesafe backend communication or at least zod to validate the response

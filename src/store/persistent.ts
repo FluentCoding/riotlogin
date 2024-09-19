@@ -1,5 +1,6 @@
 import { Store } from "@tauri-apps/plugin-store";
 import { get as getFromStore, writable } from "svelte/store";
+import type { RiotRegion } from "../components/util/riot";
 
 type PersistentValue = {
   version: number;
@@ -59,6 +60,7 @@ const persistent = await (async () => {
           name: string;
           alias?: string;
           riotId?: string;
+          region?: RiotRegion;
         }[];
       }[];
     }>("accounts", {

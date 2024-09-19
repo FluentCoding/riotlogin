@@ -11,15 +11,19 @@
   export let remove:
     | MouseEventHandler<HTMLDivElement>
     | [ActionLabel, MouseEventHandler<HTMLDivElement>];
+  export let disabled = false;
 </script>
 
 <div class="actions">
   <div
     class="action"
-    on:click={(e) => {
-      e.stopPropagation();
-      Array.isArray(edit) ? edit[1](e) : edit(e);
-    }}
+    data-disabled={disabled}
+    on:click={disabled
+      ? undefined
+      : (e) => {
+          e.stopPropagation();
+          Array.isArray(edit) ? edit[1](e) : edit(e);
+        }}
   >
     {#if Array.isArray(edit)}
       {#if "icon" in edit[0]}
@@ -31,10 +35,13 @@
   </div>
   <div
     class="action"
-    on:click={(e) => {
-      e.stopPropagation();
-      Array.isArray(remove) ? remove[1](e) : remove(e);
-    }}
+    data-disabled={disabled}
+    on:click={disabled
+      ? undefined
+      : (e) => {
+          e.stopPropagation();
+          Array.isArray(remove) ? remove[1](e) : remove(e);
+        }}
   >
     {#if Array.isArray(remove)}
       {#if "icon" in remove[0]}
@@ -61,6 +68,12 @@
 
       &:hover {
         outline: 2px solid grey;
+      }
+
+      &[data-disabled="true"] {
+        cursor: none;
+        opacity: 0.5;
+        pointer-events: none;
       }
     }
   }
