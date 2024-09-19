@@ -69,7 +69,7 @@ export const showCommonModal = async (type: "confirmDelete") => {
       title: "Are you sure?",
       fields: [],
       actions: [
-        { id: "delete", label: "Delete", color: "#f58989" },
+        { id: "delete", label: "Delete", color: "#FA8072" },
         { id: "cancel", label: "Cancel" },
       ],
     });

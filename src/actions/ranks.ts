@@ -76,7 +76,10 @@ const pullAction = {
 
         {
           const accountsToUpdate = accounts
-            .filter((account) => account.riotId !== undefined)
+            .filter(
+              (account) =>
+                account.riotId !== undefined && account.riotId.length > 0
+            )
             .filter(
               (account) =>
                 !(account.uuid in cache.entries) ||
