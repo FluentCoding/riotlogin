@@ -18,8 +18,21 @@
     $activeDropdown !== undefined || $activeModal !== undefined;
 
   onMount(() => {
+    const hoverElement = document.getElementById("header")!;
+    // overwrite original logic which maximizes the window when double clicking
+    // https://github.com/tauri-apps/tauri/blob/28169ae097af5c676ac4e7f9ef1eee9dc2ea73e8/crates/tauri/src/window/scripts/drag.js#L13
+    const onHoverElementDoubleClick = (e: MouseEvent) => {
+      if (e.button === 0 && e.detail === 2 /* dblclick */) {
+        e.stopImmediatePropagation();
+      }
+    };
+    hoverElement.addEventListener("mousedown", onHoverElementDoubleClick);
+
     pullAction.start();
-    return pullAction.stop;
+    return () => {
+      hoverElement.removeEventListener("mousedown", onHoverElementDoubleClick);
+      pullAction.stop();
+    };
   });
 </script>
 
@@ -40,7 +53,7 @@
   <Modal />
   <Dropdown />
   <div class="container">
-    <div class="header" data-tauri-drag-region>
+    <div id="header" data-tauri-drag-region>
       <!-- <div class="settings" on:click={() => {}}>Settings</div> -->
       <div class="exit" on:click={() => exit()}>Exit</div>
     </div>
@@ -84,7 +97,7 @@
     flex-direction: column;
     height: calc(100vh - 20px);
 
-    .header {
+    #header {
       display: flex;
       justify-content: end;
       gap: 5px;

@@ -4,7 +4,7 @@
   import { editMode } from "../../store/app";
   import AccountGroup from "./AccountGroup.svelte";
   import DashedNewButton from "../util/DashedNewButton.svelte";
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import Sortable from "sortablejs";
 
   const accounts = persistent.accounts;

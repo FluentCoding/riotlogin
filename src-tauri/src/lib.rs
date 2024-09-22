@@ -4,6 +4,7 @@ use std::time::Duration;
 
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder};
 use tauri::{AppHandle, Manager};
+use tauri_plugin_prevent_default::Flags;
 use win::{get_taskbar_region, send_inputs};
 use windows::core::*;
 use windows::Win32::Foundation::RECT;
@@ -106,7 +107,11 @@ pub fn run() {
             let _ = window.show().unwrap();
             let _ = window.set_focus();
         }))
-        .plugin(tauri_plugin_prevent_default::init())
+        .plugin(
+            tauri_plugin_prevent_default::Builder::new()
+                .with_flags(Flags::all().difference(Flags::RELOAD))
+                .build(),
+        )
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_process::init())

@@ -23,8 +23,6 @@
         "minHeight": 500,
         "maxHeight": 2000,
         "closable": false,
-        "maximizable": false,
-        "minimizable": false,
         "transparent": true
       }
     ],
