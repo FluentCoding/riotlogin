@@ -106,6 +106,7 @@ pub fn run() {
             let _ = window.show().unwrap();
             let _ = window.set_focus();
         }))
+        .plugin(tauri_plugin_prevent_default::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_process::init())
