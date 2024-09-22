@@ -28,7 +28,7 @@
 </script>
 
 <div
-  class="container"
+  class="account"
   on:click={(e) => !$editMode && login()}
   class:disable-interactions={$editMode}
   transition:fly={{
@@ -38,19 +38,20 @@
     easing: quintOut,
   }}
 >
-  {#if isPulled}
+  {#if rank}
+    <img
+      alt={`${rank.tier.charAt(0).toUpperCase()}${rank.tier.slice(1)}`}
+      src={`ranks/${rank.tier}.png`}
+      class="rank-icon"
+      style={isPulled ? "opacity: 0.5" : undefined}
+    />
+  {:else if isPulled}
     <div
       class="rank-icon"
       style="display: flex; align-items: center; justify-content: center"
     >
       <Loader size={36} color="gray" width={3} fullRotationInSeconds={2.5} />
     </div>
-  {:else if rank}
-    <img
-      alt={`${rank.tier.charAt(0).toUpperCase()}${rank.tier.slice(1)}`}
-      src={`ranks/${rank.tier}.png`}
-      class="rank-icon"
-    />
   {/if}
   <div class="info">
     <span class="name">{data.alias || data.name}</span>
@@ -90,7 +91,7 @@
 </div>
 
 <style lang="scss">
-  .container {
+  .account {
     position: relative;
     display: flex;
     align-items: center;
@@ -104,6 +105,8 @@
     .rank-icon {
       width: 60px;
       height: 60px;
+
+      transition: 0.2s opacity;
     }
 
     .info {

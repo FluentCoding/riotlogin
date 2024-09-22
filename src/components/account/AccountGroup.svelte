@@ -7,8 +7,32 @@
   import Account from "./Account.svelte";
   import { quintOut } from "svelte/easing";
   import EditRemoveActions from "./EditRemoveActions.svelte";
+  import { onMount } from "svelte";
+  import Sortable from "sortablejs";
 
   export let data: AccountGroupType;
+
+  onMount(() => {
+    const el = document.getElementById(data.uuid);
+    const sortable = Sortable.create(el!, {
+      group: "accounts",
+      forceFallback: true,
+      animation: 150,
+      disabled: true,
+      swapThreshold: 6,
+      onEnd(e) {
+        console.info(e);
+      },
+    });
+    const editModeSub = editMode.subscribe((isInEditMode) =>
+      sortable.option("disabled", !isInEditMode)
+    );
+
+    return () => {
+      editModeSub();
+      sortable.destroy();
+    };
+  });
 </script>
 
 <div
@@ -34,18 +58,18 @@
       </div>
     {/if}
   </div>
-  <div class="accounts">
+  <div class="accounts" id={data.uuid} data-edit={$editMode}>
     {#each data.accounts as account (account.uuid)}
       <Account data={account}></Account>
     {/each}
-    {#if $editMode}
-      <div style="margin-top: 5px">
-        <DashedNewButton click={() => accountActions.add(data.uuid)}
-          >Add account</DashedNewButton
-        >
-      </div>
-    {/if}
   </div>
+  {#if $editMode}
+    <div style="margin-top: 15px">
+      <DashedNewButton click={() => accountActions.add(data.uuid)}
+        >Add account</DashedNewButton
+      >
+    </div>
+  {/if}
 </div>
 
 <style lang="scss">
@@ -75,6 +99,11 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+
+      &[data-edit="true"] :global(.account) {
+        cursor: move;
+        cursor: -webkit-grabbing;
+      }
     }
   }
 </style>

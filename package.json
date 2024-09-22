@@ -22,6 +22,7 @@
     "@tauri-apps/plugin-stronghold": "^2.0.0-rc.1",
     "async-mutex": "^0.5.0",
     "set-interval-async": "^3.0.3",
+    "sortablejs": "^1.15.3",
     "svelte-french-toast": "^1.2.0",
     "uuid": "^10.0.0"
   },
@@ -30,6 +31,7 @@
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
     "@tauri-apps/cli": ">=2.0.0-rc.0",
+    "@types/sortablejs": "^1.15.8",
     "@types/uuid": "^10.0.0",
     "sass-embedded": "^1.77.8",
     "svelte": "^4.2.7",

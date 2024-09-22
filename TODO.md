@@ -1,8 +1,10 @@
 # Client
 
 - Drag & Drop Groups/Accounts in edit mode
+- Tooltip library
+- Resizable + Draggable Window
+- Master-Password + 2FA
 - Settings (e.g. select match history providers, autostart)
-- Store account passwords in operating system keychain
 - Auto-Update implementation
 
 # Server
