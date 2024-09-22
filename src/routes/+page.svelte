@@ -21,16 +21,16 @@
     const hoverElement = document.getElementById("header")!;
     // overwrite original logic which maximizes the window when double clicking
     // https://github.com/tauri-apps/tauri/blob/28169ae097af5c676ac4e7f9ef1eee9dc2ea73e8/crates/tauri/src/window/scripts/drag.js#L13
-    const onHoverElementDoubleClick = (e: MouseEvent) => {
+    const onHeaderElementDoubleClick = (e: MouseEvent) => {
       if (e.button === 0 && e.detail === 2 /* dblclick */) {
         e.stopImmediatePropagation();
       }
     };
-    hoverElement.addEventListener("mousedown", onHoverElementDoubleClick);
+    hoverElement.addEventListener("mousedown", onHeaderElementDoubleClick);
 
     pullAction.start();
     return () => {
-      hoverElement.removeEventListener("mousedown", onHoverElementDoubleClick);
+      hoverElement.removeEventListener("mousedown", onHeaderElementDoubleClick);
       pullAction.stop();
     };
   });
