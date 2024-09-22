@@ -1,6 +1,5 @@
 # Client
 
-- Drag & Drop Groups/Accounts in edit mode
 - Tooltip library
 - Master-Password + 2FA
 - Settings (e.g. select match history providers, autostart)
