@@ -17,7 +17,7 @@ use windows::Win32::{
 };
 
 // only chatgpt code in the entire app ggwp
-pub fn get_taskbar_size() -> Option<RECT> {
+pub fn get_taskbar_region() -> Option<RECT> {
     unsafe {
         // Get the full screen size
         let screen_width = GetSystemMetrics(SM_CXSCREEN);

@@ -18,10 +18,14 @@
         "skipTaskbar": true,
         "visible": false,
         "alwaysOnTop": true,
-        "resizable": false,
+        "minWidth": 500,
+        "maxWidth": 500,
+        "minHeight": 500,
+        "maxHeight": 2000,
         "closable": false,
         "maximizable": false,
-        "minimizable": false
+        "minimizable": false,
+        "transparent": true
       }
     ],
     "security": {

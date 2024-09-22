@@ -40,7 +40,7 @@
   <Modal />
   <Dropdown />
   <div class="container">
-    <div class="header">
+    <div class="header" data-tauri-drag-region>
       <!-- <div class="settings" on:click={() => {}}>Settings</div> -->
       <div class="exit" on:click={() => exit()}>Exit</div>
     </div>
@@ -59,7 +59,7 @@
 <style lang="scss">
   :root {
     color-scheme: dark;
-    background-color: black;
+    background-color: rgba(0, 0, 0, 0.92);
   }
 
   .disable-interactions {
@@ -88,6 +88,10 @@
       display: flex;
       justify-content: end;
       gap: 5px;
+
+      &:hover {
+        cursor: move;
+      }
 
       div {
         text-align: center;

@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder};
 use tauri::{AppHandle, Manager};
-use win::{get_taskbar_size, send_inputs};
+use win::{get_taskbar_region, send_inputs};
 use windows::core::*;
 use windows::Win32::Foundation::RECT;
 use windows::Win32::UI::Input::KeyboardAndMouse::{VK_RETURN, VK_TAB};
@@ -14,19 +14,20 @@ use windows::Win32::UI::WindowsAndMessaging::{
 
 fn setup_window(app: &AppHandle) {
     let window = app.get_webview_window("main").unwrap();
-    let screen = window.primary_monitor().unwrap().unwrap();
+    let primary_screen = window.primary_monitor().unwrap().unwrap();
+    let primary_screen_scale_factor = primary_screen.scale_factor();
+    let screen = window.current_monitor().unwrap().unwrap();
     let screen_position = screen.position();
     let screen_size = screen.size();
     let screen_scale_factor = screen.scale_factor();
     let logical_size = window.outer_size().unwrap();
-    let taskbar_size = get_taskbar_size().unwrap();
+    let taskbar_region = get_taskbar_region().unwrap();
 
     println!(
-        "\nScreen Pos X{} Y{}",
-        screen.position().x,
-        screen.position().y
+        "\nScreen Pos   X{} Y{}",
+        screen_position.x, screen_position.y
     );
-    println!("Screen SF    {}", screen.scale_factor());
+    println!("Screen SF    {}", screen_scale_factor);
     println!(
         "Screen Size  W{} H{}",
         screen_size.width, screen_size.height
@@ -37,21 +38,17 @@ fn setup_window(app: &AppHandle) {
     );
     println!(
         "Taskbar Rect T{} R{} B{} L{}",
-        taskbar_size.top, taskbar_size.right, taskbar_size.bottom, taskbar_size.left
+        taskbar_region.top, taskbar_region.right, taskbar_region.bottom, taskbar_region.left
     );
-    let logical_position = tauri::LogicalPosition {
-        x: f64::from(screen_position.x)
-            + f64::from(screen_size.width - logical_size.width) / screen_scale_factor,
-        y: f64::from(screen_position.y)
-            + (f64::from(screen_size.height - logical_size.height)
-                - f64::from(taskbar_size.bottom - taskbar_size.top))
-                / screen_scale_factor,
+    let result_position = tauri::PhysicalPosition {
+        x: screen_position.x + (screen_size.width - logical_size.width) as i32,
+        y: screen_position.y + (screen_size.height - logical_size.height) as i32
+            // explanation: taskbar_region takes taskbar size from primary monitor, now adjust to current scale factor
+            - (f64::from(taskbar_region.bottom - taskbar_region.top)
+                / (primary_screen_scale_factor / screen_scale_factor)) as i32,
     };
-    println!(
-        "Result Pos  X{} Y{}",
-        logical_position.x, logical_position.y
-    );
-    let _ = window.set_position(tauri::Position::Logical(logical_position));
+    println!("Result Pos   X{} Y{}", result_position.x, result_position.y);
+    let _ = window.set_position(tauri::Position::Physical(result_position));
     let _ = window.show().unwrap();
     let _ = window.set_focus();
 }
