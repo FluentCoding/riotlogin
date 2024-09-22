@@ -11,12 +11,10 @@
   import Sortable from "sortablejs";
 
   export let data: AccountGroupType;
+  let accountsElement: HTMLElement;
 
   onMount(() => {
-    const el = document.querySelector(
-      `#_${data.uuid} > .accounts`
-    ) as HTMLElement;
-    const sortable = Sortable.create(el, {
+    const sortable = Sortable.create(accountsElement, {
       group: "accounts",
       forceFallback: true,
       animation: 150,
@@ -25,8 +23,8 @@
       onEnd(e) {
         const oldIndex = e.oldIndex,
           newIndex = e.newIndex,
-          oldGroup = e.from.parentElement?.getAttribute("id")?.slice(1),
-          newGroup = e.to.parentElement?.getAttribute("id")?.slice(1);
+          oldGroup = e.from.parentElement?.getAttribute("id"),
+          newGroup = e.to.parentElement?.getAttribute("id");
         if (
           oldIndex === undefined ||
           newIndex === undefined ||
@@ -62,7 +60,7 @@
 
 <div
   class="group"
-  id="_{data.uuid}"
+  id={data.uuid}
   transition:fly={{
     duration: 200,
     x: -100,
@@ -84,7 +82,7 @@
       </div>
     {/if}
   </div>
-  <div class="accounts" data-edit={$editMode}>
+  <div class="accounts" data-edit={$editMode} bind:this={accountsElement}>
     {#each data.accounts as account (account.uuid)}
       <Account data={account}></Account>
     {/each}

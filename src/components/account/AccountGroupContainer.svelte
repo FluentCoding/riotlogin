@@ -8,19 +8,18 @@
   import Sortable from "sortablejs";
 
   const accounts = persistent.accounts;
+  let accountsGroupsListElement: HTMLElement;
 
   onMount(() => {
-    const el = document.getElementById("account-groups-list");
-    const sortable = Sortable.create(el!, {
+    const sortable = Sortable.create(accountsGroupsListElement!, {
       handle: ".header",
       forceFallback: true,
       animation: 150,
       disabled: true,
       onEnd(e) {
         const newIndex = e.newIndex,
-          item = e.item.getAttribute("id")?.slice(1);
-        if (newIndex === undefined || item === undefined || item === null)
-          return; // should never happen
+          item = e.item.getAttribute("id");
+        if (newIndex === undefined || item === null) return; // should never happen
 
         accountGroupActions.sort(item, newIndex);
       },
@@ -37,7 +36,7 @@
 </script>
 
 <div id="account-groups" data-edit={$editMode}>
-  <div id="account-groups-list">
+  <div id="account-groups-list" bind:this={accountsGroupsListElement}>
     {#each $accounts.groups as group (group.uuid)}
       <AccountGroup data={group} />
     {/each}
