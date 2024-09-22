@@ -29,14 +29,8 @@
 
 <div
   class="account"
-  on:click={(e) => !$editMode && login()}
+  on:click={() => !$editMode && login()}
   class:disable-interactions={$editMode}
-  transition:fly={{
-    duration: 200,
-    x: -100,
-    opacity: 0.5,
-    easing: quintOut,
-  }}
 >
   {#if rank}
     <img

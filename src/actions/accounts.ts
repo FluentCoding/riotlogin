@@ -66,6 +66,18 @@ const accountModal = {
 } as const satisfies Omit<ModalType, "title" | "actions">;
 
 export const accountGroupActions = {
+  sort: (uuid: string, newIndex: number) => {
+    const currentAccounts = persistent.accounts.get();
+    const group = currentAccounts.groups.find((group) => group.uuid === uuid);
+    if (!group) return; // smth went wrong
+    currentAccounts.groups = currentAccounts.groups.filter((e) => e !== group);
+    currentAccounts.groups = [
+      ...currentAccounts.groups.slice(0, newIndex),
+      group,
+      ...currentAccounts.groups.slice(newIndex),
+    ];
+    return persistent.accounts.set(currentAccounts);
+  },
   create: async () => {
     const result = await showModal({
       title: "Create account group",
@@ -130,6 +142,28 @@ export const accountGroupActions = {
 };
 
 export const accountActions = {
+  sort: (entries: {
+    old: { index: number; group: string };
+    new: { index: number; group: string };
+  }) => {
+    const currentAccounts = persistent.accounts.get();
+    const oldGroup = currentAccounts.groups.find(
+      (group) => group.uuid === entries.old.group
+    );
+    const newGroup = currentAccounts.groups.find(
+      (group) => group.uuid === entries.new.group
+    );
+    if (!oldGroup || !newGroup) return; // smth went wrong
+    const toMove = oldGroup.accounts[entries.old.index];
+    if (!toMove) return;
+    oldGroup.accounts = oldGroup.accounts.filter((acc) => acc !== toMove);
+    newGroup.accounts = [
+      ...newGroup.accounts.slice(0, entries.new.index),
+      toMove,
+      ...newGroup.accounts.slice(entries.new.index),
+    ];
+    return persistent.accounts.set(currentAccounts);
+  },
   add: async (groupUuid: string) => {
     const result = await showModal({
       ...accountModal,

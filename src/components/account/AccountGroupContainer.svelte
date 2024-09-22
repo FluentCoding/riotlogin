@@ -17,7 +17,12 @@
       animation: 150,
       disabled: true,
       onEnd(e) {
-        console.info(e);
+        const newIndex = e.newIndex,
+          item = e.item.getAttribute("id")?.slice(1);
+        if (newIndex === undefined || item === undefined || item === null)
+          return; // should never happen
+
+        accountGroupActions.sort(item, newIndex);
       },
     });
     const editModeSub = editMode.subscribe((isInEditMode) =>

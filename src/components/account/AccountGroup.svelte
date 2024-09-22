@@ -13,15 +13,40 @@
   export let data: AccountGroupType;
 
   onMount(() => {
-    const el = document.getElementById(data.uuid);
-    const sortable = Sortable.create(el!, {
+    const el = document.querySelector(
+      `#_${data.uuid} > .accounts`
+    ) as HTMLElement;
+    const sortable = Sortable.create(el, {
       group: "accounts",
       forceFallback: true,
       animation: 150,
       disabled: true,
       swapThreshold: 6,
       onEnd(e) {
-        console.info(e);
+        const oldIndex = e.oldIndex,
+          newIndex = e.newIndex,
+          oldGroup = e.from.parentElement?.getAttribute("id")?.slice(1),
+          newGroup = e.to.parentElement?.getAttribute("id")?.slice(1);
+        if (
+          oldIndex === undefined ||
+          newIndex === undefined ||
+          oldGroup === null ||
+          oldGroup === undefined ||
+          newGroup === null ||
+          newGroup === undefined
+        )
+          return; // should never happen
+
+        accountActions.sort({
+          old: {
+            index: oldIndex,
+            group: oldGroup,
+          },
+          new: {
+            index: newIndex,
+            group: newGroup,
+          },
+        });
       },
     });
     const editModeSub = editMode.subscribe((isInEditMode) =>
@@ -37,6 +62,7 @@
 
 <div
   class="group"
+  id="_{data.uuid}"
   transition:fly={{
     duration: 200,
     x: -100,
@@ -58,7 +84,7 @@
       </div>
     {/if}
   </div>
-  <div class="accounts" id={data.uuid} data-edit={$editMode}>
+  <div class="accounts" data-edit={$editMode}>
     {#each data.accounts as account (account.uuid)}
       <Account data={account}></Account>
     {/each}
