@@ -5,8 +5,6 @@
   import type { AccountType } from "../../store/persistent";
   import EditRemoveActions from "./EditRemoveActions.svelte";
   import { accountActions } from "../../actions/accounts";
-  import { fly } from "svelte/transition";
-  import { quintOut } from "svelte/easing";
   import persistent from "../../store/persistent";
   import Loader from "../util/Loader.svelte";
   import pullAction, { fetchRankViewURLs } from "../../actions/ranks";
@@ -34,8 +32,8 @@
 >
   {#if rank}
     <img
-      alt={`${rank.tier.charAt(0).toUpperCase()}${rank.tier.slice(1)}`}
-      src={`ranks/${rank.tier}.png`}
+      alt="{rank.tier.charAt(0).toUpperCase()}{rank.tier.slice(1)}"
+      src="ranks/{rank.tier}.png"
       class="rank-icon"
       style={isPulled ? "opacity: 0.5" : undefined}
     />

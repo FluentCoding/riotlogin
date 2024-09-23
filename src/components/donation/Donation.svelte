@@ -3,8 +3,10 @@
 </script>
 
 <div class="container">
-  Every donation helps me continue maintaining this project and keep it free for
-  everyone to use, which I would greatly appreciate:
+  <div>
+    Every donation helps me continue maintaining this project and keep it free
+    for everyone to use, which I would greatly appreciate:
+  </div>
   <div
     class="kofi"
     on:click={() => open("https://github.com/tauri-apps/tauri")}
@@ -32,8 +34,13 @@
     font-style: italic;
 
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+
+    div {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
 
     .kofi {
       margin-top: 10px;

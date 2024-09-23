@@ -56,7 +56,7 @@
     #account-groups-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .create-group-container {
