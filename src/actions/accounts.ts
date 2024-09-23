@@ -1,5 +1,5 @@
-import persistent from "../store/persistent";
-import { passwordStore } from "../store/app";
+import persistent from "../stores/persistent";
+import { passwordStore } from "../stores/app";
 import { v4 } from "uuid";
 import toast from "svelte-french-toast";
 import { invoke } from "@tauri-apps/api/core";

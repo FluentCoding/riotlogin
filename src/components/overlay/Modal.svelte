@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { activeModal } from "../../store/app";
+  import { activeModal } from "../../stores/app";
   import { clickOutside } from "../util/clickOutside";
   import { fade } from "svelte/transition";
   import type { showModal, TextModalField } from "./modal";

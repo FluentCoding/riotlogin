@@ -4,7 +4,7 @@
   import "@fontsource/inter/500.css";
   import "@fontsource/inter/500-italic.css";
   import "@fontsource/inter/600.css";
-  import { activeDropdown, activeModal } from "../store/app";
+  import { activeDropdown, activeModal } from "../stores/app";
   import { Toaster } from "svelte-french-toast";
   import Modal from "../components/overlay/Modal.svelte";
   import Dropdown from "../components/overlay/Dropdown.svelte";

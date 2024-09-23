@@ -1,7 +1,7 @@
 <script lang="ts">
   import { accountGroupActions } from "../../actions/accounts";
-  import persistent from "../../store/persistent";
-  import { editMode } from "../../store/app";
+  import persistent from "../../stores/persistent";
+  import { editMode } from "../../stores/app";
   import AccountGroup from "./AccountGroup.svelte";
   import DashedNewButton from "../util/DashedNewButton.svelte";
   import { onMount } from "svelte";

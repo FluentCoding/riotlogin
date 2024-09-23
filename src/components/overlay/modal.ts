@@ -1,4 +1,4 @@
-import { activeModal } from "../../store/app";
+import { activeModal } from "../../stores/app";
 
 interface InputModalField {
   id: string;

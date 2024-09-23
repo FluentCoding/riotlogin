@@ -1,11 +1,11 @@
 <script lang="ts">
   import Icon from "../util/Icon.svelte";
-  import { activeDropdown, editMode } from "../../store/app";
+  import { activeDropdown, editMode } from "../../stores/app";
   import toast from "svelte-french-toast";
-  import type { AccountType } from "../../store/persistent";
+  import type { AccountType } from "../../stores/persistent";
   import EditRemoveActions from "./EditRemoveActions.svelte";
   import { accountActions } from "../../actions/accounts";
-  import persistent from "../../store/persistent";
+  import persistent from "../../stores/persistent";
   import Loader from "../util/Loader.svelte";
   import pullAction, { fetchRankViewURLs } from "../../actions/ranks";
 

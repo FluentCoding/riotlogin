@@ -1,6 +1,6 @@
 <script lang="ts">
   import Donation from "../components/donation/Donation.svelte";
-  import { editMode } from "../store/app";
+  import { editMode } from "../stores/app";
   import AccountGroupContainer from "../components/account/AccountGroupContainer.svelte";
   import { onMount } from "svelte";
   import pullAction from "../actions/ranks";

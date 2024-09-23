@@ -1,5 +1,5 @@
 import { Mutex } from "async-mutex";
-import persistent, { type AccountType } from "../store/persistent";
+import persistent, { type AccountType } from "../stores/persistent";
 import periodicAction from "./utils/periodic";
 import { writable, type Writable } from "svelte/store";
 import toast from "svelte-french-toast";

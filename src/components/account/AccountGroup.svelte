@@ -1,8 +1,8 @@
 <script lang="ts">
   import { fade, fly } from "svelte/transition";
   import { accountActions, accountGroupActions } from "../../actions/accounts";
-  import type { AccountGroupType } from "../../store/persistent";
-  import { editMode } from "../../store/app";
+  import type { AccountGroupType } from "../../stores/persistent";
+  import { editMode } from "../../stores/app";
   import DashedNewButton from "../util/DashedNewButton.svelte";
   import Account from "./Account.svelte";
   import { quintOut } from "svelte/easing";
