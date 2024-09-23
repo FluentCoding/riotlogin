@@ -11,10 +11,7 @@
     class="kofi"
     on:click={() => open("https://github.com/tauri-apps/tauri")}
   >
-    <img
-      alt="kofi"
-      src="https://cdn.prod.website-files.com/5c14e387dab576fe667689cf/64f1a9ddd0246590df69ea06_kofi_short_button_white%402x.png"
-    />
+    <img alt="kofi" src="thirdparty/kofi.png" />
   </div>
 </div>
 
