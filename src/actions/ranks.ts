@@ -2,8 +2,8 @@ import { Mutex } from "async-mutex";
 import persistent, { type AccountType } from "../store/persistent";
 import periodicAction from "./utils/periodic";
 import { writable, type Writable } from "svelte/store";
-import type { RiotRegion } from "../components/util/riot";
 import toast from "svelte-french-toast";
+import type { Riot } from "../types/riot";
 
 const RANK_UPDATE_PERIOD = 1000 * 60 * 60;
 export const fetchRankViewURLs = (riotId: string, region: string) => {
@@ -37,7 +37,7 @@ export const fetchRankViewURLs = (riotId: string, region: string) => {
             tw: "tw2",
             vn: "vn2",
             th: "th2",
-          } satisfies Record<RiotRegion, string>
+          } satisfies Record<Riot.Region, string>
         )[region]
       }/${tag}`,
     },

@@ -1,22 +1,10 @@
 import { Store } from "@tauri-apps/plugin-store";
 import { get as getFromStore, writable } from "svelte/store";
-import type { RiotRegion } from "../components/util/riot";
+import type { Riot } from "../types/riot";
 
 type PersistentValue = {
   version: number;
 };
-
-type Rank =
-  | "iron"
-  | "bronze"
-  | "silver"
-  | "gold"
-  | "platinum"
-  | "emerald"
-  | "diamond"
-  | "master"
-  | "grandmaster"
-  | "challenger";
 
 export type AccountType = AccountGroupType["accounts"][0];
 export type AccountGroupType = PullPersistentValueType<"accounts">["groups"][0];
@@ -60,7 +48,7 @@ const persistent = await (async () => {
           name: string;
           alias?: string;
           riotId?: string;
-          region?: RiotRegion;
+          region?: Riot.Region;
         }[];
       }[];
     }>("accounts", {
@@ -72,7 +60,7 @@ const persistent = await (async () => {
       entries: Record<
         string,
         {
-          rank: { tier: Rank; division?: number; lp?: number };
+          rank: { tier: Riot.League.Rank; division?: number; lp?: number };
           lastTimePulled: number;
         }
       >;
