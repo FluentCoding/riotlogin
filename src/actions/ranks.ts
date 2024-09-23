@@ -3,6 +3,7 @@ import persistent, { type AccountType } from "../store/persistent";
 import periodicAction from "./utils/periodic";
 import { writable, type Writable } from "svelte/store";
 import type { RiotRegion } from "../components/util/riot";
+import toast from "svelte-french-toast";
 
 const RANK_UPDATE_PERIOD = 1000 * 60 * 60;
 export const fetchRankViewURLs = (riotId: string, region: string) => {
@@ -117,7 +118,9 @@ const pullAction = {
               ).json();
               console.info(result);
             } catch (e) {
-              console.error("Couldn't connect to rank pulling service");
+              toast.error(
+                "Failed to pull ranks, check your internet connection or reach out on discord"
+              );
             } finally {
               pullActionStore.currentlyPulledAccounts.set([]);
             }

@@ -5,11 +5,6 @@
   import { onMount } from "svelte";
   import pullAction from "../actions/ranks";
   import Header from "../components/common/Header.svelte";
-
-  onMount(() => {
-    pullAction.start();
-    return pullAction.stop;
-  });
 </script>
 
 <Header />

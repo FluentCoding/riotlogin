@@ -8,9 +8,16 @@
   import { Toaster } from "svelte-french-toast";
   import Modal from "../components/overlay/Modal.svelte";
   import Dropdown from "../components/overlay/Dropdown.svelte";
+  import { onMount } from "svelte";
+  import pullAction from "../actions/ranks";
 
   $: disableInteractionsOverlay =
     $activeDropdown !== undefined || $activeModal !== undefined;
+
+  onMount(() => {
+    pullAction.start();
+    return pullAction.stop;
+  });
 </script>
 
 <div class="page">
