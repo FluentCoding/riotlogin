@@ -19,7 +19,9 @@
       forceFallback: true,
       animation: 150,
       disabled: true,
-      swapThreshold: 6,
+      emptyInsertThreshold: 30,
+      invertSwap: true,
+      invertedSwapThreshold: 0.9,
       onEnd(e) {
         const oldIndex = e.oldIndex,
           newIndex = e.newIndex,
