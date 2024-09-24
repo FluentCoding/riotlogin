@@ -72,7 +72,7 @@
     <div class="window">
       <div class="title">{$activeModal.title}</div>
       <div class="fields">
-        {#each $activeModal.fields as field, index ("id" in field ? field.id : ".")}
+        {#each $activeModal.fields as field, index}
           <div class="field">
             {#if field.type === "space"}
               <div style="margin-top: 10px" />
@@ -108,10 +108,10 @@
                         !disabled &&
                         submitModal($activeModal.actions[0].id);
                     } else if (
-                      (e.key === "Tab" &&
-                        !e.shiftKey &&
+                      e.key === "Tab" &&
+                      ((!e.shiftKey &&
                         index === $activeModal.fields.length - 1) ||
-                      (e.key === "Tab" && e.shiftKey && index === 0)
+                        (e.shiftKey && index === 0))
                     ) {
                       e.preventDefault();
                     }
