@@ -98,7 +98,7 @@
 
 <style lang="scss">
   .group {
-    background-color: #181818;
+    background-color: rgba(24, 24, 24, 0.8);
     padding: 10px 12px;
     border-radius: 12px;
 
