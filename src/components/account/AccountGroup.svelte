@@ -19,7 +19,7 @@
       forceFallback: true,
       animation: 150,
       disabled: true,
-      emptyInsertThreshold: 30,
+      emptyInsertThreshold: 50,
       invertSwap: true,
       invertedSwapThreshold: 0.9,
       onEnd(e) {
