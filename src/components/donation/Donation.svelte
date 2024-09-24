@@ -7,9 +7,12 @@
     Every donation helps me continue maintaining this project and keep it free
     for everyone to use, which I would greatly appreciate:
   </div>
-  <div class="kofi" on:click={() => open("https://ko-fi.com/fluentcoding")}>
-    <img alt="kofi" src="thirdparty/kofi.png" />
-  </div>
+  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+  <img
+    alt="kofi"
+    on:click={() => open("https://ko-fi.com/fluentcoding")}
+    src="thirdparty/kofi.png"
+  />
 </div>
 
 <style lang="scss">
@@ -29,21 +32,18 @@
 
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 
     div {
       flex: 1;
-      display: flex;
-      justify-content: center;
     }
-
-    .kofi {
-      margin-top: 10px;
-      img {
-        height: 50px;
-        opacity: 0.8;
-        &:hover {
-          cursor: pointer;
-        }
+    img {
+      height: 50px;
+      opacity: 0.8;
+      &:hover {
+        cursor: pointer;
       }
     }
   }
