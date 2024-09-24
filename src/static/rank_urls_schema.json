@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "urls": {
+      "patternProperties": {
+        "^[a-zA-Z0-9]+$": {
+          "type": "object",
+          "properties": {
+            "icon": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "baseLink": {
+              "type": "string"
+            },
+            "region": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "required": ["icon", "label", "baseLink", "region"]
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

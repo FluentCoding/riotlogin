@@ -3,60 +3,24 @@ import persistent, { type AccountType } from "../stores/persistent";
 import periodicAction from "./utils/periodic";
 import { writable, type Writable } from "svelte/store";
 import toast from "svelte-french-toast";
-import type { Riot } from "../types/riot";
+import rankUrls from "../static/rank_urls.json";
 
 const RANK_UPDATE_PERIOD = 1000 * 60 * 60;
 export const fetchRankViewURLs = (riotId: string, region: string) => {
   const tag = riotId.replace("#", "-");
-  return {
-    opgg: {
-      icon: "thirdparty/opgg.png",
-      label: "OP.GG",
-      link: `https://www.op.gg/summoners/${region}/${tag}`,
-    },
-    ugg: {
-      icon: "thirdparty/ugg.jpeg",
-      label: "U.GG",
-      link: `https://u.gg/lol/profile/${
-        (
-          {
-            na: "na1",
-            me: "me1",
-            euw: "euw1",
-            eune: "eune",
-            oce: "oc1",
-            kr: "kr",
-            jp: "jp1",
-            br: "br1",
-            las: "la2",
-            lan: "la1",
-            ru: "ru",
-            tr: "tr1",
-            sg: "sg2",
-            ph: "ph2",
-            tw: "tw2",
-            vn: "vn2",
-            th: "th2",
-          } satisfies Record<Riot.Region, string>
-        )[region]
-      }/${tag}`,
-    },
-    deeplol: {
-      icon: "thirdparty/deeplol.png",
-      label: "DEEPLOL",
-      link: `https://deeplol.gg/summoner/${region}/${tag}`,
-    },
-    log: {
-      icon: "thirdparty/log.jpg",
-      label: "LeagueOfGraphs",
-      link: `https://www.leagueofgraphs.com/summoner/${region}/${tag}`,
-    },
-    poro: {
-      icon: "thirdparty/poro.png",
-      label: "Porofessor Live",
-      link: `https://porofessor.gg/live/${region}/${tag}`,
-    },
-  };
+
+  return Object.fromEntries(
+    Object.entries(rankUrls.urls).map(([key, value]) => [
+      key,
+      {
+        icon: value.icon,
+        label: value.label,
+        link: `${value.baseLink}/${
+          (value.region as Record<string, string>)[region] ?? region
+        }/${tag}`,
+      },
+    ])
+  );
 };
 
 const pullActionStore: {

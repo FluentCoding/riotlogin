@@ -1,0 +1,53 @@
+{
+  "$schema": "./rank_urls_schema.json",
+  "urls": {
+    "opgg": {
+      "baseLink": "https://www.op.gg/summoners",
+      "icon": "thirdparty/opgg.png",
+      "label": "OP.GG",
+      "region": {}
+    },
+    "ugg": {
+      "baseLink": "https://u.gg/lol/profile",
+      "icon": "thirdparty/ugg.jpeg",
+      "label": "U.GG",
+      "region": {
+        "na": "na1",
+        "me": "me1",
+        "euw": "euw1",
+        "eune": "eun1",
+        "oce": "oc1",
+        "jp": "jp1",
+        "br": "br1",
+        "las": "la2",
+        "lan": "la1",
+        "tr": "tr1",
+        "sg": "sg2",
+        "ph": "ph2",
+        "tw": "tw2",
+        "vn": "vn2",
+        "th": "th2"
+      }
+    },
+    "deeplol": {
+      "baseLink": "https://deeplol.gg/summoner",
+      "icon": "thirdparty/deeplol.png",
+      "label": "DEEPLOL",
+      "region": {
+        "eune": "eun"
+      }
+    },
+    "log": {
+      "baseLink": "https://leagueofgraphs.com/summoner",
+      "icon": "thirdparty/log.jpg",
+      "label": "LeagueOfGraphs",
+      "region": {}
+    },
+    "poro": {
+      "baseLink": "https://porofessor.gg/live",
+      "icon": "thirdparty/poro.png",
+      "label": "Porofessor Live",
+      "region": {}
+    }
+  }
+}

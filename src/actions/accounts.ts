@@ -9,7 +9,7 @@ import {
   type ModalType,
 } from "../components/overlay/modal";
 import pullAction from "./ranks";
-import type { RiotRegion } from "../components/util/riot";
+import type { Riot } from "../types/riot";
 
 const accountModal = {
   fields: [
@@ -60,7 +60,7 @@ const accountModal = {
         ["tw", "[TW] Taiwan"],
         ["vn", "[VN] Vietnam"],
         ["th", "[TH] Thailand"],
-      ] satisfies [RiotRegion, string][],
+      ] satisfies [Riot.Region, string][],
     },
   ],
 } as const satisfies Omit<ModalType, "title" | "actions">;
@@ -187,7 +187,7 @@ export const accountActions = {
       name: result.fields.name,
       alias: result.fields.alias,
       riotId: result.fields.riotId,
-      region: result.fields.region as RiotRegion,
+      region: result.fields.region as Riot.Region,
     });
     persistent.accounts.set(currentAccounts);
     if (result.fields.riotId) {
@@ -236,7 +236,7 @@ export const accountActions = {
                 name: result.fields.name,
                 alias: result.fields.alias,
                 riotId: result.fields.riotId,
-                region: result.fields.region as RiotRegion,
+                region: result.fields.region as Riot.Region,
               }
             : account
         ),
