@@ -1,5 +1,6 @@
 mod win;
 
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder};
@@ -13,7 +14,13 @@ use windows::Win32::UI::WindowsAndMessaging::{
     FindWindowA, GetWindowRect, SetForegroundWindow, ShowWindow, SW_RESTORE,
 };
 
+static IS_APP_READY: AtomicBool = AtomicBool::new(false);
+
 fn setup_window(app: &AppHandle) {
+    if !IS_APP_READY.load(Ordering::Relaxed) {
+        return;
+    }
+
     let window = app.get_webview_window("main").unwrap();
     let primary_screen = window.primary_monitor().unwrap().unwrap();
     let primary_screen_scale_factor = primary_screen.scale_factor();
@@ -52,6 +59,12 @@ fn setup_window(app: &AppHandle) {
     let _ = window.set_position(tauri::Position::Physical(result_position));
     let _ = window.show().unwrap();
     let _ = window.set_focus();
+}
+
+#[tauri::command]
+fn ready(app_handle: AppHandle) {
+    IS_APP_READY.store(true, Ordering::Relaxed);
+    setup_window(&app_handle);
 }
 
 #[tauri::command]
@@ -136,7 +149,7 @@ pub fn run() {
             })
             .build(),
         )
-        .invoke_handler(tauri::generate_handler![login])
+        .invoke_handler(tauri::generate_handler![login, ready])
         .on_window_event(|_, event| match event {
             tauri::WindowEvent::Resized { .. } => {
                 // Sleep for a millisecond (blocks the thread but it doesn't really matter)
@@ -172,7 +185,6 @@ pub fn run() {
                     _ => {}
                 })
                 .build(app);
-            setup_window(app.handle());
             Ok(())
         })
         .run(tauri::generate_context!())

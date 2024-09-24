@@ -10,11 +10,13 @@
   import Dropdown from "../components/overlay/Dropdown.svelte";
   import { onMount } from "svelte";
   import pullAction from "../actions/ranks";
+  import { invoke } from "@tauri-apps/api/core";
 
   $: disableInteractionsOverlay =
     $activeDropdown !== undefined || $activeModal !== undefined;
 
   onMount(() => {
+    invoke("ready"); // app is ready now, pop the window and enable tray interaction
     pullAction.start();
     return pullAction.stop;
   });
