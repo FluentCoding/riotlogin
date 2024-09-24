@@ -24,8 +24,9 @@
     .some(
       (field) =>
         field.required &&
-        "trim" in field &&
-        (field.trim ? result[field.id]!.trim() : result[field.id]) === ""
+        ("trim" in field && field.trim
+          ? result[field.id]!.trim()
+          : result[field.id]) === ""
     );
 
   const cancelModal = () => {
