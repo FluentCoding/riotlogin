@@ -21,7 +21,7 @@
 </script>
 
 {#if $activeDropdown}
-  <div style={`position: absolute; top: ${$rect?.y}px; left: ${$rect?.x}px`}>
+  <div style="position: absolute; top: {$rect?.y}px; left: {$rect?.x}px">
     <div
       class="modal"
       use:clickOutside={() => activeDropdown.set(undefined)}
