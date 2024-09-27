@@ -1,6 +1,5 @@
 # Client
 
-- Only show window on startup as soon as the component is mounted
 - Settings (e.g. select match history providers, autostart)
 - Master-Password + 2FA
 - Auto-Update implementation
