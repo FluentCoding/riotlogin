@@ -60,7 +60,12 @@ const persistent = await (async () => {
       entries: Record<
         string,
         {
-          rank: { tier: Riot.League.Rank; division?: number; lp?: number };
+          rank: {
+            tier: Riot.League.Rank;
+            division?: number;
+            lp?: number;
+            wl: [number, number];
+          };
           lastTimePulled: number;
         }
       >;

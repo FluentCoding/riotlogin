@@ -52,6 +52,7 @@
         {rank.tier.charAt(0).toUpperCase()}{rank.tier.slice(1)}
         {rank.division ?? ""}
         {rank.lp !== undefined ? `${rank.lp} LP` : ""}
+        <i>({rank.wl?.[0] ?? 0}W-{rank.wl?.[1] ?? 0}L)</i>
       </span>
     {/if}
   </div>
