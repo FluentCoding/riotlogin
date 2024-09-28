@@ -10,10 +10,6 @@
 <Header />
 <div class="gap" />
 <AccountGroupContainer />
-<div class="gap" />
-<div class="edit" on:click={() => editMode.set(!$editMode)}>
-  {$editMode ? "Stop edit mode" : "Edit Accounts"}
-</div>
 <div class="fill-remaining-height" />
 <Donation />
 

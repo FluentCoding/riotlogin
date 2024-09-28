@@ -3,6 +3,7 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
+  import { editMode } from "../../stores/app";
 
   let headerElement: HTMLElement;
 
@@ -28,6 +29,9 @@
   <div class="title" data-tauri-drag-region>RiotLogin</div>
   <div style="flex-grow: 1" data-tauri-drag-region />
   <div class="actions" data-tauri-drag-region>
+    <div class="edit" on:click={() => editMode.set(!$editMode)}>
+      {$editMode ? "Stop edit mode" : "Edit Accounts"}
+    </div>
     {#if $page.url.pathname !== "/"}
       <div class="back" on:click={() => goto("/")}>Return</div>
     {:else}
@@ -70,6 +74,12 @@
       .back {
         &:hover {
           outline: 2px solid orange;
+        }
+      }
+
+      .edit {
+        &:hover {
+          outline: 2px solid grey;
         }
       }
 
