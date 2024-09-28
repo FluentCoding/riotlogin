@@ -109,9 +109,10 @@
       justify-content: space-between;
       gap: 4px;
 
-      margin-left: 8px;
+      margin-left: 4px;
       font-size: 14px;
       font-weight: 500;
+
       .title {
         color: #d5d5d5;
         white-space: nowrap;
