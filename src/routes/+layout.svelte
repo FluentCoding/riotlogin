@@ -66,9 +66,9 @@
   }
 
   .container {
-    padding: 10px 30px;
+    padding: 8px 16px;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 20px);
+    height: calc(100vh - 16px);
   }
 </style>

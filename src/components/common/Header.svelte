@@ -29,12 +29,12 @@
   <div class="title" data-tauri-drag-region>RiotLogin</div>
   <div style="flex-grow: 1" data-tauri-drag-region />
   <div class="actions" data-tauri-drag-region>
-    <div class="edit" on:click={() => editMode.set(!$editMode)}>
-      {$editMode ? "Stop edit mode" : "Edit Accounts"}
-    </div>
     {#if $page.url.pathname !== "/"}
       <div class="back" on:click={() => goto("/")}>Return</div>
     {:else}
+      <div class="edit" on:click={() => editMode.set(!$editMode)}>
+        {$editMode ? "Stop edit mode" : "Edit Accounts"}
+      </div>
       <div class="settings" on:click={() => goto("/settings")}>Settings</div>
     {/if}
     <div class="exit" on:click={() => exit()}>Exit</div>
