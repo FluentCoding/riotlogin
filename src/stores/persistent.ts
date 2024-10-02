@@ -1,6 +1,7 @@
 import { Store } from "@tauri-apps/plugin-store";
 import { get as getFromStore, writable } from "svelte/store";
 import type { Riot } from "../types/riot";
+import { PersistentSettings } from "./settings";
 
 type PersistentValue = {
   version: number;
@@ -16,7 +17,7 @@ const persistent = await (async () => {
   const store = new Store("data.bin");
   const K = async <const T extends PersistentValue>(
     key: string,
-    _default: T
+    _default: T & { version: T["version"] }
   ) => {
     const _store = writable((await store.get<T>(key)) ?? _default);
 
@@ -74,6 +75,10 @@ const persistent = await (async () => {
       version: 1;
       entries: Record<string, string>;
     }>("raw_passwords", { version: 1, entries: {} }),
+    settings: await K<{ version: 1 } & PersistentSettings.Type>("settings", {
+      version: 1,
+      ...PersistentSettings.createDefault(),
+    }),
   };
 })();
 

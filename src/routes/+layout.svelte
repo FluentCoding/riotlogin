@@ -71,4 +71,13 @@
     flex-direction: column;
     height: calc(100vh - 16px);
   }
+
+  :global(.gap) {
+    margin-top: 14px;
+  }
+
+  :global(.fill-remaining-height) {
+    margin-top: 10px;
+    flex-grow: 1;
+  }
 </style>
