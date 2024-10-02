@@ -6,7 +6,7 @@
   export let click: MouseEventHandler<HTMLDivElement>;
 </script>
 
-<div class="add-new" on:click={click} transition:fade={{ duration: 150 }}>
+<div class="add-new" on:click={click} transition:fade={{ duration: 100 }}>
   <div class="icon"><Icon name="plus" color="white" /></div>
   <slot />
 </div>

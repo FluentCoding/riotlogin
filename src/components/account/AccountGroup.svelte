@@ -73,7 +73,7 @@
   <div class="header">
     <div class="title">{data.name}</div>
     {#if $editMode}
-      <div transition:fade={{ duration: 150 }}>
+      <div transition:fade={{ duration: 100 }}>
         <EditRemoveActions
           edit={[
             { label: "Rename" },
