@@ -1,7 +1,9 @@
 import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
 
+export class SettingActionError extends Error {}
+
 const settingsActions = {
-  autostart: async (enabled: boolean): Promise<boolean> => {
+  autostart: async (enabled: boolean) => {
     if (enabled) {
       console.info("Registering autostart...");
       await enable();
@@ -10,7 +12,9 @@ const settingsActions = {
       await disable();
     }
 
-    return (await isEnabled()) === enabled;
+    if ((await isEnabled()) !== enabled) {
+      throw new SettingActionError("Failed to toggle autostart");
+    }
   },
 };
 

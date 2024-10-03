@@ -27,7 +27,9 @@
   >
     {#if Array.isArray(edit)}
       {#if "icon" in edit[0]}
-        <Icon name={edit[0].icon} color="#bdbdbd" />
+        <div class="icon-wrapper">
+          <Icon name={edit[0].icon} color="#bdbdbd" />
+        </div>
       {:else}
         {edit[0].label}
       {/if}
@@ -45,7 +47,9 @@
   >
     {#if Array.isArray(remove)}
       {#if "icon" in remove[0]}
-        <Icon name={remove[0].icon} color="#bdbdbd" />
+        <div class="icon-wrapper">
+          <Icon name={remove[0].icon} color="#bdbdbd" />
+        </div>
       {:else}
         {remove[0].label}
       {/if}
@@ -74,6 +78,10 @@
         cursor: none;
         opacity: 0.5;
         pointer-events: none;
+      }
+
+      .icon-wrapper {
+        transform: translateY(1px);
       }
     }
   }

@@ -1,6 +1,5 @@
 <script>
   import { open } from "@tauri-apps/plugin-shell";
-  import Header from "../../components/common/Header.svelte";
   import Setting from "../../components/setting/Setting.svelte";
   import SettingGroup from "../../components/setting/SettingGroup.svelte";
   import settingsActions from "../../actions/settings";

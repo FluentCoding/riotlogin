@@ -1,11 +1,12 @@
 <script lang="ts">
+  import toast from "svelte-french-toast";
   import { editMode } from "../../stores/app";
   import persistent from "../../stores/persistent";
   import { settingsScheme } from "../../stores/settings";
+  import { SettingActionError } from "../../actions/settings";
 
   export let setting: keyof typeof settingsScheme;
-  export let hook: ((value: boolean) => Promise<boolean>) | undefined =
-    undefined;
+  export let hook: ((value: boolean) => Promise<void>) | undefined = undefined;
 
   let processingHook = false;
 
@@ -31,10 +32,13 @@
             processingHook = true;
             try {
               target.checked = !checked; // keep old state
-              const result = await hook(checked);
-              // operation failed gracefully
-              if (!result) return;
-            } catch {
+              await hook(checked);
+            } catch (e) {
+              toast.error(
+                e instanceof SettingActionError
+                  ? e.message
+                  : "Unknown error during setting action"
+              );
               return;
             } finally {
               processingHook = false;
