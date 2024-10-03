@@ -3,12 +3,13 @@
   import Header from "../../components/common/Header.svelte";
   import Setting from "../../components/setting/Setting.svelte";
   import SettingGroup from "../../components/setting/SettingGroup.svelte";
+  import settingsActions from "../../actions/settings";
 </script>
 
 <Header />
 <div class="gap" />
 <SettingGroup title="General">
-  <Setting setting="autostart" />
+  <Setting setting="autostart" hook={settingsActions.autostart} />
   <Setting setting="master_password" />
   <Setting setting="show_donation" />
 </SettingGroup>

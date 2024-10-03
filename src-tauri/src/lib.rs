@@ -159,6 +159,11 @@ pub fn run() {
             _ => {}
         })
         .setup(|app| {
+            #[cfg(desktop)]
+            let _ = app.handle().plugin(tauri_plugin_autostart::init(
+                tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+                None,
+            ));
             let _ = TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
                 .on_tray_icon_event(|tray_icon, event| match event {

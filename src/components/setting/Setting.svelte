@@ -4,7 +4,12 @@
   import { settingsScheme } from "../../stores/settings";
 
   export let setting: keyof typeof settingsScheme;
-  const settings = persistent.settings.get();
+  export let hook: ((value: boolean) => Promise<boolean>) | undefined =
+    undefined;
+
+  let processingHook = false;
+
+  const settings = persistent.settings;
   $: scheme = settingsScheme[setting];
 </script>
 
@@ -17,9 +22,27 @@
     <label class="switch">
       <input
         type="checkbox"
-        checked={settings[setting]}
-        on:change={(e) =>
-          persistent.settings.change({ [setting]: e.currentTarget.checked })}
+        checked={$settings[setting]}
+        disabled={processingHook}
+        on:change={async (e) => {
+          const target = e.currentTarget;
+          const checked = target.checked;
+          if (hook) {
+            processingHook = true;
+            try {
+              target.checked = !checked; // keep old state
+              const result = await hook(checked);
+              // operation failed gracefully
+              if (!result) return;
+            } catch {
+              return;
+            } finally {
+              processingHook = false;
+            }
+            target.checked = checked; // reenable after asynchronous code execution
+          }
+          persistent.settings.change({ [setting]: checked });
+        }}
       />
       <span class="slider"></span>
     </label>
@@ -78,7 +101,6 @@
 
       .slider {
         position: absolute;
-        cursor: pointer;
         top: 0;
         left: 0;
         right: 0;
@@ -117,6 +139,14 @@
         -webkit-transform: translateX(26px);
         -ms-transform: translateX(26px);
         transform: translateX(26px);
+      }
+
+      input[disabled] + .slider {
+        filter: brightness(70%);
+      }
+
+      input:not([disabled]) + .slider {
+        cursor: pointer;
       }
     }
   }
