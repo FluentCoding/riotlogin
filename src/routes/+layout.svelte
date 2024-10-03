@@ -11,6 +11,7 @@
   import { onMount } from "svelte";
   import pullAction from "../actions/ranks";
   import { invoke } from "@tauri-apps/api/core";
+  import Header from "../components/common/Header.svelte";
 
   $: disableInteractionsOverlay =
     $activeDropdown !== undefined || $activeModal !== undefined;
@@ -39,6 +40,7 @@
   <Modal />
   <Dropdown />
   <div class="container">
+    <Header />
     <slot />
   </div>
 </div>
@@ -67,9 +69,10 @@
 
   .container {
     padding: 8px 16px;
+    padding-bottom: 0px;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 16px);
+    height: calc(100vh - 8px);
   }
 
   :global(.gap) {

@@ -53,6 +53,7 @@
 <style lang="scss">
   #account-groups {
     overflow-y: auto;
+    padding-right: 8px;
     #account-groups-list {
       display: flex;
       flex-direction: column;

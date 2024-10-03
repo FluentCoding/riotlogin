@@ -6,7 +6,6 @@
   import settingsActions from "../../actions/settings";
 </script>
 
-<Header />
 <div class="gap" />
 <SettingGroup title="General">
   <Setting setting="autostart" hook={settingsActions.autostart} />
@@ -26,7 +25,7 @@
     color: #d5d5d5;
     text-align: center;
     font-size: 14px;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 
     .creator {
       text-decoration: underline;

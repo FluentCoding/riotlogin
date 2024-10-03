@@ -25,6 +25,7 @@
     );
     border-radius: 10px;
     padding: 10px;
+    margin-bottom: 8px;
     color: #d5d5d5;
     font-size: 13px;
     font-weight: 500;

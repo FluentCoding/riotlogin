@@ -21,6 +21,7 @@
     min-height: 40px;
     outline: 2px solid white;
     outline-style: dashed;
+    border-radius: 10px;
     margin: 2px;
     opacity: 0.8;
 

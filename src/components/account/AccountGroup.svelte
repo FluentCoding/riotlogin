@@ -90,7 +90,7 @@
     {/each}
   </div>
   {#if $editMode}
-    <div style="margin-top: 15px">
+    <div style="margin-top: 10px">
       <DashedNewButton click={() => accountActions.add(data.uuid)}
         >Add account</DashedNewButton
       >
@@ -102,7 +102,7 @@
   .group {
     background-color: rgba(24, 24, 24, 0.8);
     padding: 10px 12px;
-    border-radius: 12px;
+    border-radius: 16px;
 
     .header {
       display: flex;

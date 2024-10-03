@@ -7,7 +7,6 @@
   const settings = persistent.settings;
 </script>
 
-<Header />
 <div class="gap" />
 <AccountGroupContainer />
 {#if $settings.show_donation}

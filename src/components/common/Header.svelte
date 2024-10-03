@@ -43,6 +43,9 @@
 
 <style lang="scss">
   #header {
+    margin-top: 4px;
+    padding-left: 12px;
+
     display: flex;
     user-select: none;
 
