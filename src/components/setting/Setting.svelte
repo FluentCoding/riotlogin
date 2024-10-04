@@ -146,11 +146,7 @@
         border-radius: 50%;
         left: 2px;
         bottom: 2px;
-        background: linear-gradient(
-          90deg,
-          rgba(42, 42, 42, 1) 0%,
-          rgba(59, 59, 59, 1) 100%
-        );
+        background: linear-gradient(90deg, #2a2a2a 0%, #3b3b3b 100%);
         transition: var(--slider-animation-duration);
         box-shadow: 0px 6px 15px -2px #000000;
       }

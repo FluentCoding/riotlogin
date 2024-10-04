@@ -17,12 +17,8 @@
 
 <style lang="scss">
   .container {
-    background: rgb(42, 42, 42);
-    background: linear-gradient(
-      63deg,
-      rgba(42, 42, 42, 1) 0%,
-      rgba(27, 27, 27, 1) 100%
-    );
+    background: #2a2a2a;
+    background: linear-gradient(63deg, #2a2a2a 0%, #1b1b1b 100%);
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 8px;

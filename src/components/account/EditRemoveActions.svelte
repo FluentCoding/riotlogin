@@ -66,7 +66,7 @@
       cursor: pointer;
       color: #bdbdbd;
       font-size: 12px;
-      background-color: rgb(49, 49, 49);
+      background-color: #313131;
       padding: 1px 11px;
       border-radius: 10px;
 
