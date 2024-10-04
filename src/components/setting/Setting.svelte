@@ -148,17 +148,15 @@
         bottom: 2px;
         background: linear-gradient(90deg, #2a2a2a 0%, #3b3b3b 100%);
         transition: var(--slider-animation-duration);
-        box-shadow: 0px 6px 15px -2px #000000;
+        box-shadow: 0px 6px 14px 2px #000000;
       }
 
       input:checked + .slider {
         --slider-start-color: #0c8d00;
-        --slider-end-color: #0a6200;
+        --slider-end-color: #0e401b;
       }
 
       input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
         transform: translateX(26px);
       }
 
