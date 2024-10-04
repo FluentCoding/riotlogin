@@ -128,27 +128,6 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_process::init())
-        .plugin(
-            tauri_plugin_stronghold::Builder::new(|password| {
-                use argon2::{
-                    password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
-                    Argon2,
-                };
-
-                // Argon2 with default params (Argon2id v19)
-                let argon2 = Argon2::default();
-                let salt = SaltString::generate(&mut OsRng);
-
-                // Hash password to PHC string ($argon2id$v=19$...)
-                let password_hash = argon2
-                    .hash_password(password.as_bytes(), &salt)
-                    .unwrap()
-                    .to_string();
-
-                password_hash.as_bytes().to_vec()
-            })
-            .build(),
-        )
         .invoke_handler(tauri::generate_handler![login, ready])
         .on_window_event(|_, event| match event {
             tauri::WindowEvent::Resized { .. } => {
