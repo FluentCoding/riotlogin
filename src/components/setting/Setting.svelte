@@ -54,6 +54,22 @@
 </div>
 
 <style lang="scss">
+  :root {
+    --slider-animation-duration: 0.3s;
+  }
+
+  @property --slider-start-color {
+    syntax: "<color>";
+    initial-value: #181818;
+    inherits: false;
+  }
+
+  @property --slider-end-color {
+    syntax: "<color>";
+    initial-value: #181818;
+    inherits: false;
+  }
+
   .setting {
     position: relative;
     display: flex;
@@ -112,8 +128,14 @@
         box-shadow: 0 0 1px 1px #7f7f7f;
         border-radius: 34px;
         background-color: #181818;
-        -webkit-transition: 0.2s;
-        transition: 0.4s;
+        background: linear-gradient(
+          90deg,
+          var(--slider-start-color),
+          var(--slider-end-color)
+        );
+        transition:
+          --slider-start-color var(--slider-animation-duration),
+          --slider-end-color var(--slider-animation-duration);
       }
 
       .slider:before {
@@ -124,19 +146,18 @@
         border-radius: 50%;
         left: 2px;
         bottom: 2px;
-        background: rgb(42, 42, 42);
         background: linear-gradient(
           90deg,
           rgba(42, 42, 42, 1) 0%,
           rgba(59, 59, 59, 1) 100%
         );
-        -webkit-transition: 0.2s;
-        transition: 0.4s;
+        transition: var(--slider-animation-duration);
         box-shadow: 0px 6px 15px -2px #000000;
       }
 
       input:checked + .slider {
-        background-color: #0c8d00;
+        --slider-start-color: #0c8d00;
+        --slider-end-color: #0a6200;
       }
 
       input:checked + .slider:before {
