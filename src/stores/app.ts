@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
-import { rawPasswordStore } from "./password";
 import type { ModalType } from "../components/overlay/modal";
+import type { MasterPassword } from "../actions/password";
 
 export const activeDropdown = writable<
   | {
@@ -15,5 +15,4 @@ export const activeModal = writable<
 >();
 
 export const editMode = writable<boolean>(false);
-
-export let passwordStore = rawPasswordStore;
+export let lruMasterPassword: { value?: MasterPassword } = {};

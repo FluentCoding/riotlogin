@@ -2,6 +2,10 @@ import { Store } from "@tauri-apps/plugin-store";
 import { get as getFromStore, writable } from "svelte/store";
 import type { Riot } from "../types/riot";
 import { PersistentSettings } from "./settings";
+import type {
+  EncryptedAccountPassword,
+  EncryptedMasterPassword,
+} from "../actions/password";
 
 type PersistentValue = {
   version: number;
@@ -71,10 +75,19 @@ const persistent = await (async () => {
         }
       >;
     }>("ranks_cache", { version: 1, entries: {} }),
-    rawPasswords: await K<{
-      version: 1;
-      entries: Record<string, string>;
-    }>("raw_passwords", { version: 1, entries: {} }),
+    passwords: await K<
+      {
+        version: 1;
+      } & (
+        | {
+            entries: Record<string, string>;
+          }
+        | {
+            masterPassword: EncryptedMasterPassword;
+            entries: Record<string, EncryptedAccountPassword>;
+          }
+      )
+    >("passwords", { version: 1, entries: {} }),
     settings: await K<{ version: 1 } & PersistentSettings.Type>("settings", {
       version: 1,
       ...PersistentSettings.createDefault(),

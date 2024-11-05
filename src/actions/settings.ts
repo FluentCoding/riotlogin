@@ -1,6 +1,5 @@
 import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
-
-export class SettingActionError extends Error {}
+import { AppError } from "../types/app";
 
 const settingsActions = {
   autostart: async (enabled: boolean) => {
@@ -13,7 +12,7 @@ const settingsActions = {
     }
 
     if ((await isEnabled()) !== enabled) {
-      throw new SettingActionError("Failed to toggle autostart");
+      throw new AppError("Failed to toggle autostart");
     }
   },
 };

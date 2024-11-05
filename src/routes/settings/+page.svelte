@@ -1,15 +1,35 @@
-<script>
+<script lang="ts">
   import { open } from "@tauri-apps/plugin-shell";
   import Setting from "../../components/setting/Setting.svelte";
   import SettingGroup from "../../components/setting/SettingGroup.svelte";
   import settingsActions from "../../actions/settings";
+  import persistent from "../../stores/persistent";
+  import passwordActions from "../../actions/password";
+
+  const persistentPasswords = persistent.passwords;
 </script>
 
 <div class="gap" />
 <SettingGroup title="General">
   <Setting setting="autostart" hook={settingsActions.autostart} />
-  <Setting setting="master_password" />
+  <Setting
+    hook={passwordActions.migrate}
+    setting={{
+      type: "checkbox",
+      label: "Master Password",
+      description: "If active, all passwords are encrypted",
+      value: "masterPassword" in $persistentPasswords,
+    }}
+  />
   <Setting setting="show_donation" />
+  <Setting
+    hook={passwordActions.reset}
+    setting={{
+      type: "button",
+      label: "Reset all passwords",
+      description: "If you forgot your master password",
+    }}
+  />
 </SettingGroup>
 <div class="fill-remaining-height" />
 <div class="madeby">

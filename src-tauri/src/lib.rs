@@ -3,6 +3,9 @@ mod win;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 
+use argon2::password_hash::rand_core::OsRng;
+use argon2::password_hash::SaltString;
+use argon2::{Argon2, PasswordHash, PasswordHasher, PasswordVerifier};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder};
 use tauri::{AppHandle, Manager};
 use tauri_plugin_prevent_default::Flags;
@@ -111,6 +114,29 @@ fn login(username: &str, password: &str) -> std::result::Result<String, String> 
     Ok("Successfully logged in".into())
 }
 
+#[tauri::command]
+fn argon_hash(password: &str) -> std::result::Result<String, ()> {
+    let salt = SaltString::generate(&mut OsRng);
+    let argon2 = Argon2::default();
+    match argon2.hash_password(password.as_bytes(), &salt) {
+        Ok(v) => Ok(v.to_string()),
+        Err(_) => Err(()),
+    }
+}
+
+#[tauri::command]
+fn argon_verify(password: &str, hash: &str) -> std::result::Result<(), ()> {
+    match PasswordHash::new(&hash) {
+        Ok(parsed_hash) => {
+            match Argon2::default().verify_password(password.as_bytes(), &parsed_hash) {
+                Ok(_) => Ok(()),
+                Err(_) => Err(()),
+            }
+        }
+        Err(_) => Err(()),
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -128,7 +154,12 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_process::init())
-        .invoke_handler(tauri::generate_handler![login, ready])
+        .invoke_handler(tauri::generate_handler![
+            login,
+            ready,
+            argon_hash,
+            argon_verify
+        ])
         .on_window_event(|_, event| match event {
             tauri::WindowEvent::Resized { .. } => {
                 // Sleep for a millisecond (blocks the thread but it doesn't really matter)

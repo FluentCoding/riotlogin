@@ -1,5 +1,16 @@
 import { activeModal } from "../../stores/app";
 
+export namespace ModalCollection {
+  export function of<const T extends Record<string, ModalType>>(collection: T) {
+    return {
+      async show<const X extends keyof T>(type: X) {
+        const result = await showModal(collection[type]);
+        return result;
+      },
+    };
+  }
+}
+
 interface InputModalField {
   id: string;
   required?: true;
@@ -63,18 +74,13 @@ export const showModal = <const T extends ModalType>(
   });
 };
 
-export const showCommonModal = async (type: "confirmDelete") => {
-  if (type == "confirmDelete") {
-    const result = await showModal({
-      title: "Are you sure?",
-      fields: [],
-      actions: [
-        { id: "delete", label: "Delete", color: "#FA8072" },
-        { id: "cancel", label: "Cancel" },
-      ],
-    });
-    return result?.action === "delete";
-  }
-
-  return false;
-};
+export const commonModals = ModalCollection.of({
+  confirmDelete: {
+    title: "Are you sure?",
+    fields: [],
+    actions: [
+      { id: "delete", label: "Delete", color: "#FA8072" },
+      { id: "cancel", label: "Cancel" },
+    ],
+  },
+});

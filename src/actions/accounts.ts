@@ -1,15 +1,16 @@
 import persistent from "../stores/persistent";
-import { passwordStore } from "../stores/app";
 import { v4 } from "uuid";
-import toast from "svelte-french-toast";
 import { invoke } from "@tauri-apps/api/core";
 import {
-  showCommonModal,
+  commonModals,
   showModal,
   type ModalType,
 } from "../components/overlay/modal";
 import pullAction from "./ranks";
 import type { Riot } from "../types/riot";
+import passwordActions from "./password";
+import toast from "svelte-french-toast";
+import { AppError } from "../types/app";
 
 const accountModal = {
   fields: [
@@ -121,7 +122,8 @@ export const accountGroupActions = {
     });
   },
   delete: async (uuid: string) => {
-    if (!(await showCommonModal("confirmDelete"))) return;
+    const confirmDelete = (await commonModals.show("confirmDelete"))?.action;
+    if (!confirmDelete || confirmDelete == "cancel") return;
 
     const currentAccounts = persistent.accounts.get();
     const removedGroup = currentAccounts.groups.find(
@@ -131,7 +133,7 @@ export const accountGroupActions = {
 
     await Promise.all(
       removedGroup.accounts.map((account) =>
-        passwordStore.removePassword(account.uuid)
+        passwordActions.entry(account.uuid).delete()
       )
     );
     persistent.accounts.set({
@@ -178,10 +180,7 @@ export const accountActions = {
     );
 
     const userUuid = v4();
-    if (!(await passwordStore.addPassword(userUuid, result.fields.password))) {
-      toast.error("Couldn't store password :(");
-      return;
-    }
+    await passwordActions.entry(userUuid).set(result.fields.password);
     group?.accounts.push({
       uuid: userUuid,
       name: result.fields.name,
@@ -201,25 +200,26 @@ export const accountActions = {
       .flat()
       .find((account) => account.uuid === uuid);
     if (!existingAccount) return; // something would have to be fucking wrong for this to happen
+    const accountPasswordEntry = passwordActions.entry(uuid);
+    const existingPassword = await accountPasswordEntry.get();
 
     const result = await showModal({
       ...accountModal,
-      fields: accountModal.fields
-        .filter((field) => field.type !== "password")
-        .map((field) => {
-          if (field.type !== "space") {
-            return {
-              ...field,
-              default: {
-                name: existingAccount.name,
-                alias: existingAccount.alias,
-                riotId: existingAccount.riotId,
-                region: existingAccount.region,
-              }[field.id],
-            };
-          }
-          return field;
-        }),
+      fields: accountModal.fields.map((field) => {
+        if (field.type !== "space") {
+          return {
+            ...field,
+            default: {
+              name: existingAccount.name,
+              password: existingPassword,
+              alias: existingAccount.alias,
+              riotId: existingAccount.riotId,
+              region: existingAccount.region,
+            }[field.id],
+          };
+        }
+        return field;
+      }),
       actions: [{ label: "Edit", id: "edit" }],
       title: "Edit account",
     });
@@ -242,6 +242,7 @@ export const accountActions = {
         ),
       })),
     });
+    result.fields.password && accountPasswordEntry.set(result.fields.password);
     // remove from cache and trigger update when region or riot id changes
     if (
       result.fields.region !== existingAccount.region ||
@@ -264,12 +265,11 @@ export const accountActions = {
     }
   },
   delete: async (uuid: string) => {
-    if (!(await showCommonModal("confirmDelete"))) return;
+    const confirmDelete = (await commonModals.show("confirmDelete"))?.action;
+    if (!confirmDelete || confirmDelete == "cancel") return;
 
     const currentAccounts = persistent.accounts.get();
-    if (!(await passwordStore.removePassword(uuid))) {
-      toast.error("Couldn't remove password :(");
-    }
+    await passwordActions.entry(uuid).delete();
     persistent.accounts.set({
       ...currentAccounts,
       groups: currentAccounts.groups.map((group) => ({
@@ -284,7 +284,16 @@ export const accountActions = {
       .groups.map((group) => group.accounts)
       .flat()
       .find((account) => account.uuid === uuid)?.name;
-    const password = await passwordStore.getPassword(uuid);
-    return invoke<string>("login", { username, password });
+    const password = await passwordActions.entry(uuid).get();
+    if (!password)
+      throw new AppError(
+        "Apparently, the account's password has been reset, please provide a new one."
+      );
+
+    await toast.promise(invoke<string>("login", { username, password }), {
+      loading: "Logging in...",
+      success: (e) => e,
+      error: (e) => e,
+    });
   },
 };

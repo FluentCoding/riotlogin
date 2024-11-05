@@ -5,13 +5,14 @@
   import "@fontsource/inter/500-italic.css";
   import "@fontsource/inter/600.css";
   import { activeDropdown, activeModal } from "../stores/app";
-  import { Toaster } from "svelte-french-toast";
+  import { Toaster, toast } from "svelte-french-toast";
   import Modal from "../components/overlay/Modal.svelte";
   import Dropdown from "../components/overlay/Dropdown.svelte";
   import { onMount } from "svelte";
   import pullAction from "../actions/ranks";
   import { invoke } from "@tauri-apps/api/core";
   import Header from "../components/common/Header.svelte";
+  import { AppError } from "../types/app";
 
   $: disableInteractionsOverlay =
     $activeDropdown !== undefined || $activeModal !== undefined;
@@ -21,8 +22,23 @@
     pullAction.start();
     return pullAction.stop;
   });
+
+  const handleError = (e: unknown) => {
+    const errorEvent = e as ErrorEvent;
+    if (errorEvent.error instanceof AppError)
+      toast.error(errorEvent.error.message);
+  };
+  const handleUnhandledRejection = (e: unknown) => {
+    const errorEvent = e as PromiseRejectionEvent;
+    if (errorEvent.reason instanceof AppError)
+      toast.error(errorEvent.reason.message);
+  };
 </script>
 
+<svelte:window
+  on:error|capture={handleError}
+  on:unhandledrejection|capture={handleUnhandledRejection}
+/>
 <div class="page">
   {#if disableInteractionsOverlay}
     <div

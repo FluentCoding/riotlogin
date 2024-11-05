@@ -11,14 +11,6 @@
 
   export let data: AccountType;
 
-  const login = async () => {
-    toast.promise(accountActions.login(data.uuid), {
-      loading: "Logging in...",
-      success: (e) => e,
-      error: (e) => e,
-    });
-  };
-
   const ranksCache = persistent.ranksCache;
   const currentlyPulledAccounts = pullAction.store.currentlyPulledAccounts;
   $: isPulled = $currentlyPulledAccounts.includes(data.uuid);
@@ -27,7 +19,7 @@
 
 <div
   class="account"
-  on:click={() => !$editMode && login()}
+  on:click={() => !$editMode && accountActions.login(data.uuid)}
   class:disable-interactions={$editMode}
 >
   {#if rank}

@@ -1,7 +1,9 @@
 # Client
 
-- Settings (e.g. select match history providers, autostart)
-- Master-Password + 2FA
+- Persistent Module: PhantomString where possible, migration implementation
+- Allow reset of all data (e.g. if you forgot the master password)
+- Ask for Master-Password on each startup
+- Move Svelte components from /util to /common
 - Auto-Update implementation
 
 # Server
@@ -17,12 +19,15 @@
 # Prerelease
 
 - Remove all unused imports
-- Landing page + domain + webhosting (maybe hetzner)
+- Landing page (+ credits) + domain + webhosting (maybe hetzner)
 - KoFi
 - GitHub Action for windows releases
 
 # Postrelease
 
+- ESLint + Prettier rules (force triple =, force explicit return type, potentially CI script)
+- Option to save CSV of all entries (without password)
+- Make match history providers selectable in settings
 - Optional tab group on top for all games (only support league for now)
 - Show other ranks than SoloQ
 - Color Themes
